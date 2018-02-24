@@ -1,0 +1,3980 @@
+[
+	{
+		"target": "BillToAccount",
+		"datapoints": [
+			[
+				null,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "CRTTLCOUSRPROFBT",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "CancelFulfillmentOrder",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "CreateFulfillmentOrder",
+		"datapoints": [
+			[
+				11.555555555555555,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "DVCSWAPBT",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "EM_GETVALIDNPA",
+		"datapoints": [
+			[
+				20.777777777777775,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "EM_MDNFINDAVAIL",
+		"datapoints": [
+			[
+				65.88888888888889,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "EquipmentInventoryAvailability",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "FINDMDNSUBHIST",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "FLIPFLOPDVCBT",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "GETACCOUNTINFOBT",
+		"datapoints": [
+			[
+				443.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "GETACCTBYDOMAINBT",
+		"datapoints": [
+			[
+				4.111111111111111,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "GETBALANCEINFOBT",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "GETBANBASICINFO",
+		"datapoints": [
+			[
+				19.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "GETBANBASICINFO_SOR",
+		"datapoints": [
+			[
+				409.3333333333333,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "GETBANCREDITINFO",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "GETBANCREDITINFO_SOR",
+		"datapoints": [
+			[
+				38.22222222222222,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "GETBANFINANCIALINFO",
+		"datapoints": [
+			[
+				216.77777777777774,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "GETBANFINANCIALINFO_SOR",
+		"datapoints": [
+			[
+				343.2222222222222,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "GETBANLEVELSERVICES",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "GETBANORDERS",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "GETBANSECURITYINFO",
+		"datapoints": [
+			[
+				4.777777777777778,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "GETBILLSYSBT",
+		"datapoints": [
+			[
+				24.555555555555557,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "GETDAINFOBT",
+		"datapoints": [
+			[
+				null,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "GETDVCBT",
+		"datapoints": [
+			[
+				33.44444444444444,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "GETDVCCHARBT",
+		"datapoints": [
+			[
+				48.888888888888886,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "GETDVCINFOBT",
+		"datapoints": [
+			[
+				89.33333333333333,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "GETINFOCTIBT",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "GETMAC",
+		"datapoints": [
+			[
+				14.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "GETMACBT",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "GETMDNINFO",
+		"datapoints": [
+			[
+				32.33333333333333,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "GETMDNINFOBT",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "GETMDNLISTBT",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "GETNAIBT",
+		"datapoints": [
+			[
+				53.22222222222223,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "GETNAIINFOBT",
+		"datapoints": [
+			[
+				null,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "GETOPTIND",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "GETPVSNINFOBT",
+		"datapoints": [
+			[
+				87.44444444444444,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "GETRSCINFOBT",
+		"datapoints": [
+			[
+				106.33333333333333,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "GETRSLRINFOBT",
+		"datapoints": [
+			[
+				15.888888888888888,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "GETRSLRINFOBYMDNBT",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "GETSUBBASICINFO",
+		"datapoints": [
+			[
+				21.666666666666668,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "GETSUBEQUIPMENTLIST",
+		"datapoints": [
+			[
+				24.333333333333332,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "GETSUBSCRIBERLIST",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "GETSUBSCRIBERLIST_SOR",
+		"datapoints": [
+			[
+				100.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "GETTLCOUSRLISTBT",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "GETTLCOUSRPROFBT",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "GETTPAMDNASSOCBT",
+		"datapoints": [
+			[
+				null,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "GETTPAPROFBT",
+		"datapoints": [
+			[
+				8.444444444444445,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "GETUSRPRF",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "InventoryOrderDetails",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "LDAPProcessor",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "LogArchiverJob",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "MAINTACCTASGMBT",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "MAINTADMINDOMAINBT",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "MAINTTPALSTBYMDNBT",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "MDNSWAPBT",
+		"datapoints": [
+			[
+				null,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "ManageControlListBt",
+		"datapoints": [
+			[
+				164.11111111111111,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "ManageNotificationMessageBT",
+		"datapoints": [
+			[
+				26.333333333333332,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "OBTAINNPABYCSABT",
+		"datapoints": [
+			[
+				15.555555555555555,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "PORTBILLTRGRBT",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "PORTCANCLBT",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "PORTCHGDDTBT",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "PORTINBT",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "PORTINFOBT",
+		"datapoints": [
+			[
+				14.333333333333334,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "PORTINUPDBT",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "PORTPVSNINFOBT",
+		"datapoints": [
+			[
+				2.3333333333333335,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "PORTSTATUSBT",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "PUSHMDNUPDATES",
+		"datapoints": [
+			[
+				99.22222222222223,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "QRYSUBUNBILLEDUSAGESUMMARY",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "QueryItemPricingInfo",
+		"datapoints": [
+			[
+				2.444444444444444,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "QueryOrderListBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "QueryPortInfo",
+		"datapoints": [
+			[
+				362.6666666666667,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "QueryStatusCenterMessagesBt",
+		"datapoints": [
+			[
+				43.111111111111114,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "REACTFROMCANCLBT",
+		"datapoints": [
+			[
+				null,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "RELRSRVMDNBT",
+		"datapoints": [
+			[
+				null,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "REQDVCHISTBT",
+		"datapoints": [
+			[
+				27.444444444444446,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "RSRVMDNBT",
+		"datapoints": [
+			[
+				null,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "SBSCRPSRCHBT",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "SRCHFORBMPMDNBT",
+		"datapoints": [
+			[
+				4.555555555555555,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "SRCHFORDOMAINBT",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "SRCHFORMDNGRPBT",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "SRCHFORTPABT",
+		"datapoints": [
+			[
+				56.111111111111114,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "SWAPMSIDBT",
+		"datapoints": [
+			[
+				null,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "SWAPMSID_EM",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "UPDDVCBT",
+		"datapoints": [
+			[
+				48.444444444444436,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "UPDDVCMDNBT",
+		"datapoints": [
+			[
+				225.55555555555554,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "UPDMDNINFOBT",
+		"datapoints": [
+			[
+				20.11111111111111,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "UPDMDNPROFBT",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "UPDTACCTNOTIFYBT",
+		"datapoints": [
+			[
+				null,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "UPDTCONSENTBT",
+		"datapoints": [
+			[
+				78.55555555555556,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "UPDTPORTINFO",
+		"datapoints": [
+			[
+				10.11111111111111,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "UPDTXREFIT",
+		"datapoints": [
+			[
+				139.7777777777778,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "USFServiceBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "VALDVCBT",
+		"datapoints": [
+			[
+				38.333333333333336,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "accountReinstateUSFBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "addMemoBt",
+		"datapoints": [
+			[
+				110.55555555555556,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "asyncProcessDeviceReturnBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "authenticatePinsightSubscriberBt",
+		"datapoints": [
+			[
+				15.888888888888891,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "authenticateUserLoginBt",
+		"datapoints": [
+			[
+				122.33333333333333,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "calculateEquipmentTaxBt",
+		"datapoints": [
+			[
+				211.2222222222222,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "calculatePrepaidInvoiceTaxBt",
+		"datapoints": [
+			[
+				395.2222222222222,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "ccaActivateAndProvisionBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "ccaDeactivateAndDeprovisionBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "changeAiraveAccessBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "checkActivationStatusBt",
+		"datapoints": [
+			[
+				139.33333333333334,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "checkAssuranceWirelessCoverageBt",
+		"datapoints": [
+			[
+				60.555555555555564,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "checkBogxEligibilityBt",
+		"datapoints": [
+			[
+				201.44444444444446,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "checkCASLRulesBt",
+		"datapoints": [
+			[
+				33.11111111111111,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "checkChangeOfOwnershipEligibilityBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "checkCreditAndDepositBt",
+		"datapoints": [
+			[
+				213.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "checkCreditAndDepositRequirementBt",
+		"datapoints": [
+			[
+				231.33333333333334,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "checkCreditAndInitiateOrderBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "checkEarlyUpgradeEligibilityBt",
+		"datapoints": [
+			[
+				40.666666666666664,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "checkFeeRefundEligibilityBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "checkHCAccountConsentBt",
+		"datapoints": [
+			[
+				null,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "checkHCFinancialProductEligibilityBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "checkIntlServicesEligibilityBt",
+		"datapoints": [
+			[
+				8.777777777777779,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "checkLoanEligibilityBt",
+		"datapoints": [
+			[
+				333.22222222222223,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "checkMacEligibilityBt",
+		"datapoints": [
+			[
+				174.55555555555554,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "checkMacExclusivityBt",
+		"datapoints": [
+			[
+				9.555555555555555,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "checkNbaOfferEligibilityBt",
+		"datapoints": [
+			[
+				0.5555555555555556,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "checkPlanServicesEligibilityBt",
+		"datapoints": [
+			[
+				722.6666666666666,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "checkPrepaidGradEligibilityBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "checkPrepaidLoanEligibilityBt",
+		"datapoints": [
+			[
+				97.11111111111113,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "checkPurchaseMethodEligibilityBt",
+		"datapoints": [
+			[
+				5.888888888888889,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "checkRebateEligibilityListBt",
+		"datapoints": [
+			[
+				185.22222222222226,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "checkRebateEligibilityLiteBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "createAccessLogBt",
+		"datapoints": [
+			[
+				null,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "createAccountBt",
+		"datapoints": [
+			[
+				126.55555555555556,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "createActivationAndUpgradeFeeLogBt",
+		"datapoints": [
+			[
+				2.444444444444444,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "createBillingAccountAccessLogBt",
+		"datapoints": [
+			[
+				22.777777777777775,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "createESASOR",
+		"datapoints": [
+			[
+				1790.888888888889,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "createFunctionalActivityLogBt",
+		"datapoints": [
+			[
+				31.222222222222218,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "createInteractionBt",
+		"datapoints": [
+			[
+				29.555555555555554,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "createLiteEsaBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "createLoanBt",
+		"datapoints": [
+			[
+				31.222222222222225,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "createLoanContractBt",
+		"datapoints": [
+			[
+				328.1111111111111,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "createPrepaidWebOrderCustomerInfoBt",
+		"datapoints": [
+			[
+				5.333333333333333,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "createRmaOrderBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "createStoreOrderNotificationBt",
+		"datapoints": [
+			[
+				18.22222222222222,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "createStudentInfoBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "createUsageThresholdBreachBt",
+		"datapoints": [
+			[
+				20.555555555555554,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "creditPortalCheckBusinessCredit",
+		"datapoints": [
+			[
+				1424.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "creditPortalCheckConsumerCredit",
+		"datapoints": [
+			[
+				3244.444444444445,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "creditPortalInquireCredit",
+		"datapoints": [
+			[
+				158.33333333333334,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "enwWholesaleSubscriptionDetail",
+		"datapoints": [
+			[
+				108.8888888888889,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "enwWholesaleSwapSplit",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "enwWholesaleUsageInquiry",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "enwWholesaleWnp",
+		"datapoints": [
+			[
+				35.888888888888886,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "eppKeyExchangeBt",
+		"datapoints": [
+			[
+				2.7777777777777772,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "findAvailMDN_em",
+		"datapoints": [
+			[
+				187.55555555555554,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "getDeviceChar_em",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "getNAIBySub",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "getNAIInfo_em",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "getNAI_em",
+		"datapoints": [
+			[
+				48.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "getValidNPA_em",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "initiateWholeSalePortinResponse",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "initiateWholesaleDueDateTimeChange",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "initiateWholesalePortNotifications",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "initiateWholesalePortOutRequest",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "initiateWholesalePortStatus",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "keyrefresher",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "lidaApprovedListBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "lockRebateEligibilityBt",
+		"datapoints": [
+			[
+				161.22222222222223,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "lookupGroupAndEligibilityBt",
+		"datapoints": [
+			[
+				38.77777777777778,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "maintIoUserBt",
+		"datapoints": [
+			[
+				2.111111111111111,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "manageAdjustmentCodesBt",
+		"datapoints": [
+			[
+				55.77777777777777,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "manageCartBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "manageChangeOfOwnershipBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "manageContentPurchaseBt",
+		"datapoints": [
+			[
+				25.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "manageDeviceLockBt",
+		"datapoints": [
+			[
+				1372.3333333333333,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "manageDeviceOrderBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "manageFraudOrderBt",
+		"datapoints": [
+			[
+				10.111111111111112,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "manageFulfillmentResponseBt",
+		"datapoints": [
+			[
+				8.777777777777779,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "manageLifeLinePinBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "manageMultiSimDevicePairBt",
+		"datapoints": [
+			[
+				362.22222222222223,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "managePrepaidWebOrderCustomerInfoBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "manageStudentInfoBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "manageSubscriberE911AddressBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "manageSubscriberServicesBt",
+		"datapoints": [
+			[
+				5431.666666666667,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "manageUserProfilesBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "manageUserProfilesInternal",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "notifySubscriberVendorServicesBt",
+		"datapoints": [
+			[
+				4.555555555555556,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "performAssignmentBtV1",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "processCloudOrderBtV1",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "processCreditDetailsBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "processDeviceReturnBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "processGoodSubscriberInfoBt",
+		"datapoints": [
+			[
+				5.222222222222221,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "processGoogleSubscriberInfoBt",
+		"datapoints": [
+			[
+				117.66666666666667,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "processIntlGsmRoamSubscriberInfoBt",
+		"datapoints": [
+			[
+				11.222222222222223,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "processNotifySubscriberServicesInfoBt",
+		"datapoints": [
+			[
+				126.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "processPaymentBt",
+		"datapoints": [
+			[
+				1318.2222222222224,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "processPrepaidGraduationBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "processPsiSubscriberInfoBt",
+		"datapoints": [
+			[
+				6.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "processPttSubInfoBt",
+		"datapoints": [
+			[
+				107.22222222222221,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "processSpotifySubscriberInfoBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "processSpsSubscriberInfoBt",
+		"datapoints": [
+			[
+				132.44444444444446,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "processSubPairingInfoBt",
+		"datapoints": [
+			[
+				111.66666666666667,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "processSubscriberInfoBt",
+		"datapoints": [
+			[
+				23.11111111111111,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "processSubscriberPolicyInfoBt",
+		"datapoints": [
+			[
+				179.11111111111111,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "processTelarixSubscriberInfoBt",
+		"datapoints": [
+			[
+				303.77777777777777,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "provisionOfferBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryAccountBasicInfoBt",
+		"datapoints": [
+			[
+				77.1111111111111,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryAccountChargesAndAdjustmentsBt",
+		"datapoints": [
+			[
+				119.11111111111113,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryAccountControlSettingsBt",
+		"datapoints": [
+			[
+				198.44444444444446,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryAccountCreditInfoBt",
+		"datapoints": [
+			[
+				51.88888888888889,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryAccountDetailInfoBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryAccountDeviceListBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryAccountFinancialInfoBt",
+		"datapoints": [
+			[
+				239.33333333333334,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryAccountIdentityInfo",
+		"datapoints": [
+			[
+				14.555555555555557,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryAccountInfoBt_Request",
+		"datapoints": [
+			[
+				72.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryAccountInvoiceDetailsBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryAccountLoanDetailsBt",
+		"datapoints": [
+			[
+				102.55555555555556,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryAccountOrdersBt",
+		"datapoints": [
+			[
+				29.555555555555557,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryAccountPortInListBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryAccountPromoPlanInfoBt",
+		"datapoints": [
+			[
+				null,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryAccountSecurityInfoBt",
+		"datapoints": [
+			[
+				10.888888888888891,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryAccountServicesBt",
+		"datapoints": [
+			[
+				9.666666666666666,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryAccountSubscriberCorporationInfo",
+		"datapoints": [
+			[
+				18.555555555555554,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryAccountSubscriberListBt",
+		"datapoints": [
+			[
+				85.55555555555556,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryActivationAndUpgradeFeesBt",
+		"datapoints": [
+			[
+				9.333333333333334,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryAdjustmentInfoBt",
+		"datapoints": [
+			[
+				51.555555555555564,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryAffinityInfoBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryAiraveAccessBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryAslAccountAdminListBt",
+		"datapoints": [
+			[
+				21.888888888888886,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryAssignedAdjustmentCodesBt",
+		"datapoints": [
+			[
+				55.555555555555564,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryAvailableNpaCsaBt",
+		"datapoints": [
+			[
+				14.777777777777777,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryAvailableNpaNxxBt",
+		"datapoints": [
+			[
+				16.77777777777778,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryBalanceAndChargesBt",
+		"datapoints": [
+			[
+				365.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryBillToAccountEligibilityBt",
+		"datapoints": [
+			[
+				34.333333333333336,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryBundledSubscriberListBt",
+		"datapoints": [
+			[
+				14.666666666666666,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryCarrierDeviceInfoBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryCarrierInvoiceInfoBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryCartDetailBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryCartListBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryCdsSpotifyUserDetailsBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryChangeOfOwnershipStatusBt",
+		"datapoints": [
+			[
+				3.777777777777778,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryCityStateBt",
+		"datapoints": [
+			[
+				1.3333333333333333,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryClientAuthorizationBt",
+		"datapoints": [
+			[
+				null,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryClientProfileBt",
+		"datapoints": [
+			[
+				null,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryConsentedCustomerInfoBt",
+		"datapoints": [
+			[
+				null,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryContactPreferenceInfoBt",
+		"datapoints": [
+			[
+				210.44444444444446,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryControlListBt",
+		"datapoints": [
+			[
+				40.333333333333336,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryCorporationInfoBt",
+		"datapoints": [
+			[
+				18.666666666666668,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryCorporationUpdatesBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryCreditAppStatusInfoBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryCtmsCaseInfoBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryDataServicesStatusBt",
+		"datapoints": [
+			[
+				46.55555555555555,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryDealerListBt",
+		"datapoints": [
+			[
+				2.777777777777778,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryDepositEvaluationBt",
+		"datapoints": [
+			[
+				20.555555555555557,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryDeviceHistoryByResourceBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryDeviceInfoBt",
+		"datapoints": [
+			[
+				108.44444444444444,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryDeviceInfoBt_SOR",
+		"datapoints": [
+			[
+				128.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryDeviceInteractionHistoryBt",
+		"datapoints": [
+			[
+				73.77777777777779,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryDeviceListBt",
+		"datapoints": [
+			[
+				66.11111111111111,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryDeviceLockStatusBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryDeviceMacListBt",
+		"datapoints": [
+			[
+				28.222222222222225,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryDevicePurchaseMethodBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryDiscountQnABt",
+		"datapoints": [
+			[
+				2.6666666666666665,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryEquipmentAvailabilityBt",
+		"datapoints": [
+			[
+				104.33333333333333,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryFinancialOffersBt",
+		"datapoints": [
+			[
+				109.33333333333333,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryFunctionalActivityLogBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryHierarchyInfoBT",
+		"datapoints": [
+			[
+				20.77777777777778,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryIBContractInfoBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryILDiscountVerificationBt",
+		"datapoints": [
+			[
+				6.888888888888889,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryILVerificationStatusBt",
+		"datapoints": [
+			[
+				18.333333333333332,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryInteractionAlertsBt",
+		"datapoints": [
+			[
+				68.77777777777777,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryInteractionDetailsBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryInteractionSummaryBt",
+		"datapoints": [
+			[
+				384.4444444444444,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryInternationalRatesBt",
+		"datapoints": [
+			[
+				58.22222222222222,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryLogSubscriberInfoForCommissionBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryLoginAttemptStatusBt",
+		"datapoints": [
+			[
+				7.555555555555556,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryLteUsageInfoBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryMemoListBt",
+		"datapoints": [
+			[
+				118.77777777777779,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryMusSubscriberInfoBt",
+		"datapoints": [
+			[
+				8.555555555555555,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryNotificationMessageParameterBt",
+		"datapoints": [
+			[
+				57.666666666666664,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryOptInfo",
+		"datapoints": [
+			[
+				28.666666666666668,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryOptInfoHistoryBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryOrderInfoBt",
+		"datapoints": [
+			[
+				219.33333333333334,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryOrderStatusBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryPermissionDetailsBt",
+		"datapoints": [
+			[
+				9.666666666666666,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryPinsightSubscriberInfoBt",
+		"datapoints": [
+			[
+				33.888888888888886,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryPlansPriceRangeInfoBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryPolicyDetailsInfoBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryPolicyExclusionListBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryPortMessage",
+		"datapoints": [
+			[
+				21.88888888888889,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryPreferredSerialInfoBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryPrepaidAllowanceBt",
+		"datapoints": [
+			[
+				250.7777777777778,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryPrepaidBalanceAndThresholdInfoBt",
+		"datapoints": [
+			[
+				151.33333333333334,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryPrepaidBalanceBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryPrepaidLoanDeviceListBtV1",
+		"datapoints": [
+			[
+				22.88888888888889,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryProfileInfoBt",
+		"datapoints": [
+			[
+				6.333333333333333,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryProgrammingInfoBt",
+		"datapoints": [
+			[
+				55.666666666666664,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryProgrammingInstructionsBt",
+		"datapoints": [
+			[
+				5.111111111111111,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryRebateHistoryBt",
+		"datapoints": [
+			[
+				1.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryReferenceAccountTypeListBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryReferenceAffinityDetailInfoBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryReferenceAffinityListBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryReferenceBillCycleListBt",
+		"datapoints": [
+			[
+				5.888888888888889,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryReferenceCardTypeInfoBt",
+		"datapoints": [
+			[
+				null,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryReferenceCorpSocListBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryReferenceCsaInfoBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryReferenceDepositRequirementInfoBt",
+		"datapoints": [
+			[
+				11.111111111111112,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryReferenceHppttDomainInfoBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryReferenceLargeBanThresholdInfoBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryReferenceMarketInfoBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryReferenceMemoTypeListBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryReferenceParameterValuesBt",
+		"datapoints": [
+			[
+				3.7777777777777772,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryReferenceSecurityInfoBt",
+		"datapoints": [
+			[
+				55.333333333333336,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryReferenceShippingListBt",
+		"datapoints": [
+			[
+				1.888888888888889,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryReferenceSocListBt",
+		"datapoints": [
+			[
+				2.3333333333333335,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryReferenceStaticIpNgpInfoBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryReferenceTinAbaInfoBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryResourceCharacteristicsBtV1",
+		"datapoints": [
+			[
+				13.444444444444445,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryResourceHistoryByDeviceBt",
+		"datapoints": [
+			[
+				2.6666666666666665,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryResourcePoolInfoBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryServiceProviderPortFieldMapInfoBt",
+		"datapoints": [
+			[
+				1.6666666666666667,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryShippingSlaDateBt",
+		"datapoints": [
+			[
+				7.555555555555556,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "querySubscriberBasicInfoBt",
+		"datapoints": [
+			[
+				73.55555555555556,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "querySubscriberBilledUsageDetailsBt",
+		"datapoints": [
+			[
+				691.5555555555555,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "querySubscriberBilledUsageSummaryBt",
+		"datapoints": [
+			[
+				74.77777777777777,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "querySubscriberCdsProfileBt",
+		"datapoints": [
+			[
+				49.444444444444436,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "querySubscriberDataBtV1",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "querySubscriberDeviceListBt",
+		"datapoints": [
+			[
+				14.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "querySubscriberHppttDomainListBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "querySubscriberInfoBt_Request",
+		"datapoints": [
+			[
+				68.44444444444444,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "querySubscriberPrepaidInfoBt",
+		"datapoints": [
+			[
+				74.44444444444444,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "querySubscriberResourceHistoryListBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "querySubscriberServicesBt",
+		"datapoints": [
+			[
+				233.8888888888889,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "querySubscriberUnbilledUsageDetailsBt",
+		"datapoints": [
+			[
+				1121.111111111111,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "querySubscriberUnbilledUsageSummaryBt",
+		"datapoints": [
+			[
+				254.55555555555554,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "querySubscriberUsageInfoBt",
+		"datapoints": [
+			[
+				286.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryUserPermissionBt",
+		"datapoints": [
+			[
+				35.44444444444445,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryUserPreferencesInfoBtV2",
+		"datapoints": [
+			[
+				24.444444444444443,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryVendorSubscriberServicesBt",
+		"datapoints": [
+			[
+				29.11111111111111,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "queryVirtualQueueBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "reactivateCanceledResourcesBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "reactvNAI_em",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "reatvFromCancel_em",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "refreshProvisioningBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "relResMDN_em",
+		"datapoints": [
+			[
+				48.55555555555555,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "releaseResrvNAI_em",
+		"datapoints": [
+			[
+				16.555555555555554,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "replyPortOutRequestBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "reqESNHist_em",
+		"datapoints": [
+			[
+				39.77777777777778,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "requestInfoMDN_em",
+		"datapoints": [
+			[
+				14.777777777777779,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "reserveAndActivateResourcesBt",
+		"datapoints": [
+			[
+				356.1111111111111,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "reserveMDN_em",
+		"datapoints": [
+			[
+				72.33333333333333,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "reserveNAI_em",
+		"datapoints": [
+			[
+				62.666666666666664,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "reserveOrderBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "restoreCollectionsAccountBt",
+		"datapoints": [
+			[
+				4269.555555555556,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "retailerActivateBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "retailerEsnSwapMigrateBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "retailerPortInBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "retailerSwapEsnBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "retailerTopUpBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "retailerValidateEsnSwapBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "retailerValidateMinBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "retrievePdfFormBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "retrieveSpotifyUserDetailsBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "retryRequestBt",
+		"datapoints": [
+			[
+				116.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "retryRequestInternal",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "rtrServiceBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "salesAdviceBt",
+		"datapoints": [
+			[
+				97.33333333333333,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "searchAccountListBt",
+		"datapoints": [
+			[
+				17.555555555555557,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "searchAccountListBt_SOR",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "searchCorporationListBt",
+		"datapoints": [
+			[
+				6.4444444444444455,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "searchHierarchyListBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "searchPrepaidWebOrderCustomerListBt",
+		"datapoints": [
+			[
+				10.11111111111111,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "searchStudentInfoBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "sendCdsProvisioningBt",
+		"datapoints": [
+			[
+				324.22222222222223,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "sendCreditInfoLogBt",
+		"datapoints": [
+			[
+				725.4444444444445,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "sendDaypassNotificationBt",
+		"datapoints": [
+			[
+				35.333333333333336,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "sendEmailBt",
+		"datapoints": [
+			[
+				1.4444444444444444,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "sendProductNotificationBt",
+		"datapoints": [
+			[
+				1670.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "sendTextMessage",
+		"datapoints": [
+			[
+				65.77777777777777,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "sendWapMessageBt",
+		"datapoints": [
+			[
+				5.888888888888889,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "sequoiaAsyncEventNotificationBt",
+		"datapoints": [
+			[
+				26.333333333333332,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "sequoiaEventNotification",
+		"datapoints": [
+			[
+				0.5555555555555556,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "sequoiaGetSubscriber",
+		"datapoints": [
+			[
+				215.11111111111111,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "storeDealerActivityInfoBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "storeDiscountQnABt",
+		"datapoints": [
+			[
+				6.222222222222222,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "storePdfFormBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "storeSalesPortalActivityInfoBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "submitAssuranceWirelessOrderBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "submitAssuranceWirelessProspectInfoBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "submitEquipmentPurchaseOrderBt",
+		"datapoints": [
+			[
+				48.77777777777778,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "submitFulfillmentOrderBt",
+		"datapoints": [
+			[
+				1375.111111111111,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "submitILDiscountVerificationBt",
+		"datapoints": [
+			[
+				523.3333333333334,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "submitLoginAttemptBt",
+		"datapoints": [
+			[
+				28.11111111111111,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "swapESN_em",
+		"datapoints": [
+			[
+				312.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "swapMDN_em",
+		"datapoints": [
+			[
+				156.11111111111111,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "swapNAI_em",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "swapSubscriberEquipment",
+		"datapoints": [
+			[
+				3086.777777777778,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "updateAssuranceWirelessPlanBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "updateCdsSpotifyUserDetailsBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "updateContactPreferenceInfoBt",
+		"datapoints": [
+			[
+				337.4444444444444,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "updateLoanBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "updateMusSubscriberInfoBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "updateOptInfoBt",
+		"datapoints": [
+			[
+				6.444444444444444,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "updateOrderNotificationBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "updatePolicyEvaluateListBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "updatePolicyExclusionList",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "updateThrottleStateBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "updateUserPermissionBt",
+		"datapoints": [
+			[
+				98.11111111111113,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "updateUserPreferencesInfoBtV2",
+		"datapoints": [
+			[
+				54.77777777777777,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "updateWebToRetailAppointmentBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "updateXREF",
+		"datapoints": [
+			[
+				221.44444444444446,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "updtESNMDN_em",
+		"datapoints": [
+			[
+				200.77777777777774,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "updtMDNInfo_em",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "updtNAIInfo_em",
+		"datapoints": [
+			[
+				46.44444444444445,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "updtWOCust",
+		"datapoints": [
+			[
+				0.7777777777777777,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "validateAccountLevelServicesBt",
+		"datapoints": [
+			[
+				15.555555555555555,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "validateBuybackDeviceBt",
+		"datapoints": [
+			[
+				773.7777777777777,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "validateChangeOfOwnershipBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "validateESN_em",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "validateEmailAddress",
+		"datapoints": [
+			[
+				705.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "validateGiveBackDeviceBt",
+		"datapoints": [
+			[
+				621.6666666666666,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "validateLeaseOwnerForUpgradeBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "validateOrderPromotionInfoBt",
+		"datapoints": [
+			[
+				9.333333333333334,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "validatePinsightSubscriberBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "validatePolicyInfoBt",
+		"datapoints": [
+			[
+				28.555555555555554,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "validateProductTrialInfoBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "validateReturnSsgStatusBt",
+		"datapoints": [
+			[
+				null,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "validateRoleAuthorizationBt",
+		"datapoints": [
+			[
+				11.555555555555557,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "validateTradeInDeviceBt",
+		"datapoints": [
+			[
+				860.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "verifyAch",
+		"datapoints": [
+			[
+				1101.888888888889,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "verifyAppleCareBt",
+		"datapoints": [
+			[
+				null,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "verifyCorporationInfoBt",
+		"datapoints": [
+			[
+				2.888888888888889,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "wholesaleActivatePendingSubscriptionBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "wholesaleActivateSubscriptionBt",
+		"datapoints": [
+			[
+				1058.5555555555554,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "wholesaleActivateSubscriptionWithPortInBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "wholesaleChangeServiceAndDeviceBt",
+		"datapoints": [
+			[
+				null,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "wholesaleChangeServicePlansBt",
+		"datapoints": [
+			[
+				1105.111111111111,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "wholesaleQueryCsaStaticIpNgpInfoV1",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "wholesaleQueryPpSocListBtV3",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "wholesaleQuerySubscriptionBt",
+		"datapoints": [
+			[
+				316.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "wholesaleReserveSubscriptionBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "wholesaleReserveSubscriptionGeoCodeBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "wholesaleSubscriptionBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "wholesaleSubscriptionModifyBt",
+		"datapoints": [
+			[
+				1582.3333333333333,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "wholesaleSwapDeviceBtV2",
+		"datapoints": [
+			[
+				908.3333333333334,
+				1510915140
+			]
+		]
+	},
+	{
+		"target": "zurichAsyncEventNotificationBt",
+		"datapoints": [
+			[
+				0.0,
+				1510915140
+			]
+		]
+	}
+]
