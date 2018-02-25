@@ -37,7 +37,7 @@ You can use the QueryableGraphiteClient to get positive and negative condition e
 		// Add the 'negative condition' examples
 		Arrays.stream(this.goodies).forEach(g -> {
 			try {
-				negativeTrainingExamples.add(GraphiteMultiSeries.from(json)); // or from file
+				negativeTrainingExamples.add(GraphiteMultiSeries.from(g)); // load from InputString, json, etc...
 			} catch (IOException e) {
 				log.error("{}", e);
 			}
@@ -46,7 +46,7 @@ You can use the QueryableGraphiteClient to get positive and negative condition e
 		// Add the 'positive condition' examples
 		Arrays.stream(this.baddies).forEach(g -> {
 			try {
-				positiveTrainingExamples.add(GraphiteMultiSeries.from(json)); // or from file
+				positiveTrainingExamples.add(GraphiteMultiSeries.from(g)); // load from InputString, json, etc...
 			} catch (IOException e) {
 				log.error("{}", e);
 			}
