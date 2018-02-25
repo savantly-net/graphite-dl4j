@@ -1,4 +1,4 @@
-package net.savantly.datavec.graphite;
+package net.savantly.learning.graphite.convert;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -15,8 +15,12 @@ import org.nd4j.linalg.primitives.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class GraphiteMultiSeriesToCsv {
-	private static final Logger log = LoggerFactory.getLogger(GraphiteMultiSeriesToCsv.class);
+import net.savantly.learning.graphite.domain.GraphiteDatapoint;
+import net.savantly.learning.graphite.domain.GraphiteMultiSeries;
+import net.savantly.learning.graphite.domain.GraphiteSeries;
+
+public class GraphiteToCsv {
+	private static final Logger log = LoggerFactory.getLogger(GraphiteToCsv.class);
 
 	private File baseDir;
 
@@ -24,16 +28,14 @@ public class GraphiteMultiSeriesToCsv {
 	 * 
 	 * @param workingDir
 	 *            Base directory to store the data.
-	 * @param graphiteMultiSeries
-	 *            A list of graphite series to load
 	 */
-	public GraphiteMultiSeriesToCsv(String workingDir) {
+	public GraphiteToCsv(String workingDir) {
 		baseDir = new File(workingDir);
 		baseDir.mkdirs();
 	}
 
-	public static GraphiteMultiSeriesToCsv get(String workingDirectory) {
-		return new GraphiteMultiSeriesToCsv(workingDirectory);
+	public static GraphiteToCsv get(String workingDirectory) {
+		return new GraphiteToCsv(workingDirectory);
 	}
 
 	public void createFile(String fileName, Pair<String, GraphiteMultiSeries>... series) throws IOException {
@@ -59,7 +61,7 @@ public class GraphiteMultiSeriesToCsv {
 
 	/**
 	 * 
-	 * @param series
+	 * @param series A list of labeled GraphiteMultiSeries data
 	 * @return the number of feature/label file pairs
 	 * @throws IOException
 	 */
@@ -85,27 +87,35 @@ public class GraphiteMultiSeriesToCsv {
 				return d.getDatapoints().stream();
 			});
 			try {
-				FileWriter labelsWriter = new FileWriter(labelsFile);
-				FileWriter featuresWriter = new FileWriter(featuresFile);
 				// sort by epoch, and strip points where the value is valid
 				List<GraphiteDatapoint> sortedDataPoints = datapointStream.sorted().filter(d -> d.getValue() != null && !Double.isNaN(d.getValue().doubleValue())).collect(Collectors.toList());
 				AtomicLong dataPointCounter = new AtomicLong(sortedDataPoints.size());
-				sortedDataPoints.forEach(d -> {
-					long leftOver = dataPointCounter.getAndDecrement();
-					try {
-						labelsWriter.write(String.format("%s", d.getLabel()));
-						featuresWriter.write(String.format("%s", d.getValue()));
-						if (leftOver > 1) {
-							labelsWriter.write("\n");
-							featuresWriter.write("\n");
+				if (dataPointCounter.get() > 0) {
+					FileWriter labelsWriter = new FileWriter(labelsFile);
+					FileWriter featuresWriter = new FileWriter(featuresFile);
+					sortedDataPoints.forEach(d -> {
+						long leftOver = dataPointCounter.getAndDecrement();
+						try {
+							labelsWriter.write(String.format("%s", d.getLabel()));
+							featuresWriter.write(String.format("%s", d.getValue()));
+							if (leftOver > 1) {
+								labelsWriter.write("\n");
+								featuresWriter.write("\n");
+							}
+						} catch (IOException e) {
+							log.error("{}", e);
+							throw new RuntimeException(e);
 						}
-					} catch (IOException e) {
-						log.error("{}", e);
-						throw new RuntimeException(e);
-					}
-				});
-				labelsWriter.close();
-				featuresWriter.close();
+					});
+					labelsWriter.close();
+					featuresWriter.close();
+				} else {
+					// There were no valid datapoints so we delete the file and decrement the counter
+					featuresFile.delete();
+					labelsFile.delete();
+					counter.decrementAndGet();
+				}
+
 			} catch (IOException e) {
 				log.error("{}", e);
 				throw new RuntimeException(e);

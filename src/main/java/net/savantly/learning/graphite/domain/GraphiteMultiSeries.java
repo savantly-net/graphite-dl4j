@@ -1,4 +1,4 @@
-package net.savantly.datavec.graphite;
+package net.savantly.learning.graphite.domain;
 
 import java.io.BufferedReader;
 import java.io.File;

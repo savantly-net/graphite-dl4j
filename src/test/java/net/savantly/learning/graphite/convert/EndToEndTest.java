@@ -1,14 +1,11 @@
-package net.savantly.datavec.graphite;
+package net.savantly.learning.graphite.convert;
 
 import java.io.IOException;
-import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import org.datavec.api.records.reader.SequenceRecordReader;
@@ -37,31 +34,21 @@ import org.nd4j.linalg.lossfunctions.LossFunctions;
 import org.nd4j.linalg.primitives.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.sprint.eai.web.configuration.GraphiteConfiguration;
 
-import net.savantly.datavec.graphite.GraphiteMultiSeries;
-import net.savantly.datavec.graphite.GraphiteMultiSeriesToCsv;
-import net.savantly.graphite.QueryableGraphiteClient;
-import net.savantly.graphite.query.GraphiteQuery;
-import net.savantly.graphite.query.GraphiteQueryBuilder;
-import net.savantly.graphite.query.fomat.JsonFormatter;
+import net.savantly.learning.graphite.convert.GraphiteToCsv;
+import net.savantly.learning.graphite.domain.GraphiteMultiSeries;
 
 @RunWith(SpringRunner.class)
-public class GraphiteConfigurationTest {
-	private static final Logger log = LoggerFactory.getLogger(GraphiteConfigurationTest.class);
+public class EndToEndTest {
+	private static final Logger log = LoggerFactory.getLogger(EndToEndTest.class);
 
-	@Autowired
-	GraphiteConfiguration graphiteConfig;
 
 	@Value("classpath:/data/training/bad_*.json")
 	Resource[] baddies;
@@ -69,25 +56,6 @@ public class GraphiteConfigurationTest {
 	@Value("classpath:/data/training/good_*.json")
 	Resource[] goodies;
 
-	@Test
-	public void testClient() throws UnknownHostException, SocketException {
-		QueryableGraphiteClient client = graphiteConfig.graphiteClient();
-		JsonFormatter formatter = new JsonFormatter();
-		GraphiteQuery<JsonNode> query = new GraphiteQueryBuilder<>(formatter).setTarget("constantLine(123.456)")
-				.build();
-		JsonNode results = client.query(query);
-		log.debug("{}", results);
-	}
-
-	@Test
-	public void testBTData() throws UnknownHostException, SocketException {
-		QueryableGraphiteClient client = graphiteConfig.graphiteClient();
-		JsonFormatter formatter = new JsonFormatter();
-		GraphiteQuery<JsonNode> query = new GraphiteQueryBuilder<>(formatter).setTarget("constantLine(123.456)")
-				.build();
-		JsonNode results = client.query(query);
-		log.debug("{}", results);
-	}
 
 	@Test
 	public void testSequentialFiles()
@@ -101,7 +69,7 @@ public class GraphiteConfigurationTest {
 		// was 'false'
 		Arrays.stream(this.goodies).forEach(g -> {
 			try {
-				Pair p = Pair.of("0", GraphiteMultiSeries.from(g.getFile()));
+				Pair<String, GraphiteMultiSeries> p = Pair.of("0", GraphiteMultiSeries.from(g.getFile()));
 				pairs.add(p);
 			} catch (IOException e) {
 				log.error("{}", e);
@@ -112,7 +80,7 @@ public class GraphiteConfigurationTest {
 		// 'true'
 		Arrays.stream(this.baddies).forEach(g -> {
 			try {
-				Pair p = Pair.of("1", GraphiteMultiSeries.from(g.getFile()));
+				Pair<String, GraphiteMultiSeries> p = Pair.of("1", GraphiteMultiSeries.from(g.getFile()));
 				pairs.add(p);
 			} catch (IOException e) {
 				log.error("{}", e);
@@ -120,7 +88,7 @@ public class GraphiteConfigurationTest {
 		});
 
 		// Write the transformed data to csv files in the dir
-		int fileCount = GraphiteMultiSeriesToCsv.get(dir.toAbsolutePath().toString()).createFileSequence(pairs);
+		int fileCount = GraphiteToCsv.get(dir.toAbsolutePath().toString()).createFileSequence(pairs);
 
 		Arrays.stream(dir.toFile().list()).forEach(f -> {
 			log.info(f);
@@ -142,7 +110,7 @@ public class GraphiteConfigurationTest {
 		boolean doRegression = false;
 		
 		DataSetIterator trainData = new SequenceRecordReaderDataSetIterator(trainFeatures, trainLabels, miniBatchSize,
-				numberOfPossibleLabels, doRegression, AlignmentMode.ALIGN_END);
+				numberOfPossibleLabels, doRegression, AlignmentMode.EQUAL_LENGTH);
 		
 		
 
@@ -211,12 +179,6 @@ public class GraphiteConfigurationTest {
 	@Configuration
 	static class TestConfig {
 
-		@Bean
-		public GraphiteConfiguration graphiteConfiguration() {
-			GraphiteConfiguration config = new GraphiteConfiguration();
-			config.setHost("144.229.218.107");
-			return config;
-		}
 	}
 
 }

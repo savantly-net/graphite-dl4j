@@ -1,9 +1,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>datavec-graphite</artifactId>
+	<artifactId>graphite-dl4j</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
-	<name>datavec-graphite</name>
+	<name>graphite-dl4j</name>
 	<url>https://github.com/savantly-net/datavec-graphite</url>
 	<scm>
 		<url>https://github.com/savantly-net/datavec-graphite</url>
@@ -36,7 +36,10 @@
 	</licenses>
 	<inceptionYear>2018</inceptionYear>
 	<properties>
-        <datavec.version>0.9.1</datavec.version>
+		<nd4j.backend>nd4j-native-platform</nd4j.backend>
+		<nd4j.version>0.9.1</nd4j.version>
+		<dl4j.version>0.9.1</dl4j.version>
+		<datavec.version>0.9.1</datavec.version>
 	</properties>
 	<build>
 		<plugins>
@@ -60,21 +63,30 @@
 			<artifactId>jackson-databind</artifactId>
 			<version>2.9.4</version>
 		</dependency>
-		
+
 		<dependency>
 			<artifactId>datavec-data-codec</artifactId>
 			<groupId>org.datavec</groupId>
 			<version>${datavec.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.deeplearning4j</groupId>
+			<artifactId>deeplearning4j-core</artifactId>
+			<version>${dl4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.nd4j</groupId>
+			<artifactId>${nd4j.backend}</artifactId>
+			<version>${nd4j.version}</version>
 		</dependency>
 
 		<!-- TEST -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.11</version>
+			<version>4.12</version>
 			<scope>test</scope>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-classic -->
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
@@ -82,7 +94,20 @@
 			<scope>test</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter</artifactId>
+			<version>1.5.10.RELEASE</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<version>1.5.10.RELEASE</version>
+			<scope>test</scope>
+		</dependency>
 
 	</dependencies>
-	<description>Read graphite series in datavec</description>
+	<groupId>net.savantly.learning</groupId>
+	<description>Perform machine algorithms on graphite query results</description>
 </project>

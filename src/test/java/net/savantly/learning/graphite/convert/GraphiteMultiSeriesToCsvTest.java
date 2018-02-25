@@ -1,4 +1,4 @@
-package net.savantly.datavec.graphite;
+package net.savantly.learning.graphite.convert;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,6 +16,9 @@ import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
+import net.savantly.learning.graphite.convert.GraphiteToCsv;
+import net.savantly.learning.graphite.domain.GraphiteMultiSeries;
+
 public class GraphiteMultiSeriesToCsvTest {
 	private final static Logger log = LoggerFactory.getLogger(GraphiteMultiSeriesToCsvTest.class);
 	
@@ -25,7 +28,7 @@ public class GraphiteMultiSeriesToCsvTest {
 		File jsonFile = jsonResource.getFile();
 		Pair<String, GraphiteMultiSeries> series = Pair.of("test", GraphiteMultiSeries.from(jsonFile));
 		File csvFile = File.createTempFile("data", ".csv");
-		GraphiteMultiSeriesToCsv.get(csvFile.getParent()).createFile(csvFile.getName(), series);
+		GraphiteToCsv.get(csvFile.getParent()).createFile(csvFile.getName(), series);
 		log.info(csvFile.getAbsolutePath());
 	}
 	
@@ -38,7 +41,7 @@ public class GraphiteMultiSeriesToCsvTest {
 		
 		Path dir = Files.createDirectories(Paths.get("target", "datavec"));
 		
-		GraphiteMultiSeriesToCsv.get(dir.toAbsolutePath().toString()).createFileSequence(Arrays.asList(series1, series2));
+		GraphiteToCsv.get(dir.toAbsolutePath().toString()).createFileSequence(Arrays.asList(series1, series2));
 		Arrays.stream(dir.toFile().list()).forEach(f -> {
 			log.info(f);
 		});
