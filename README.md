@@ -1,2 +1,3 @@
-# datavec-graphite
-Graphite json reader for datavec
+# graphite-dl4j
+
+Perform machine algorithms on graphite query results

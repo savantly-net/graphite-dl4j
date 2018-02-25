@@ -1,9 +1,7 @@
-package net.savantly.learning.graphite.convert;
+package net.savantly.learning.graphite.learners;
 
+import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -24,8 +22,6 @@ import org.deeplearning4j.nn.conf.layers.RnnOutputLayer;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 import org.nd4j.linalg.dataset.api.preprocessor.DataNormalization;
@@ -34,85 +30,70 @@ import org.nd4j.linalg.lossfunctions.LossFunctions;
 import org.nd4j.linalg.primitives.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.Resource;
-import org.springframework.test.context.junit4.SpringRunner;
-
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 
 import net.savantly.learning.graphite.convert.GraphiteToCsv;
 import net.savantly.learning.graphite.domain.GraphiteMultiSeries;
 
-@RunWith(SpringRunner.class)
-public class EndToEndTest {
-	private static final Logger log = LoggerFactory.getLogger(EndToEndTest.class);
+public class SimpleStateClassifier {
+	private static final Logger log = LoggerFactory.getLogger(SimpleStateClassifier.class);
+	
+	private final int numberOfPossibleLabels = 2;
+	private List<GraphiteMultiSeries> positiveTrainingExamples = new ArrayList<>();
+	private List<GraphiteMultiSeries> negativeTrainingExamples = new ArrayList<>();
+	private List<GraphiteMultiSeries> positiveTestingExamples = new ArrayList<>();
+	private List<GraphiteMultiSeries> negativeTestingExamples = new ArrayList<>();
+	private File workingDirectory = new File("./data");
+	private int miniBatchSize = 10;
+	private boolean doRegression = false;
+	private int numberOfIterations = 40;
 
+	private SimpleStateClassifier() {
+	}
 
-	@Value("classpath:/data/training/bad_*.json")
-	Resource[] baddies;
+	public static SimpleStateClassifier builder() {
+		return new SimpleStateClassifier();
+	}
 
-	@Value("classpath:/data/training/good_*.json")
-	Resource[] goodies;
-
-
-	@Test
-	public void testSequentialFiles()
-			throws JsonParseException, JsonMappingException, IOException, InterruptedException {
-
-		Path dir = Files.createDirectories(Paths.get("target", "datavec"));
-
+	public TrainingResult train() throws IOException, InterruptedException {
+		TrainingResult result = new TrainingResult();
+		
 		List<Pair<String, GraphiteMultiSeries>> pairs = new ArrayList<>();
 
-		// Add the 'good' examples and label them 0, as in the outage condition
-		// was 'false'
-		Arrays.stream(this.goodies).forEach(g -> {
-			try {
-				Pair<String, GraphiteMultiSeries> p = Pair.of("0", GraphiteMultiSeries.from(g.getFile()));
-				pairs.add(p);
-			} catch (IOException e) {
-				log.error("{}", e);
-			}
+		// Add the positive condition examples
+		this.positiveTrainingExamples.stream().forEach(g -> {
+			Pair<String, GraphiteMultiSeries> p = Pair.of("0", g);
+			pairs.add(p);
 		});
 
-		// Add the 'bad' examples and label them 1, as in the outage condition was
-		// 'true'
-		Arrays.stream(this.baddies).forEach(g -> {
-			try {
-				Pair<String, GraphiteMultiSeries> p = Pair.of("1", GraphiteMultiSeries.from(g.getFile()));
-				pairs.add(p);
-			} catch (IOException e) {
-				log.error("{}", e);
-			}
+		// Add the negative condition examples
+		this.negativeTrainingExamples.stream().forEach(g -> {
+			Pair<String, GraphiteMultiSeries> p = Pair.of("0", g);
+			pairs.add(p);
 		});
 
 		// Write the transformed data to csv files in the dir
-		int fileCount = GraphiteToCsv.get(dir.toAbsolutePath().toString()).createFileSequence(pairs);
+		int fileCount = GraphiteToCsv.get(this.workingDirectory.getAbsolutePath()).createFileSequence(pairs);
 
-		Arrays.stream(dir.toFile().list()).forEach(f -> {
+		Arrays.stream(this.workingDirectory.list()).forEach(f -> {
 			log.info(f);
 		});
-		
 
-		String featureFilesMatcher = dir.resolve("%d.features.csv").toAbsolutePath().toString();
-		String labelFilesMatcher = dir.resolve("%d.labels.csv").toAbsolutePath().toString();
-		
+		String featureFilesMatcher = this.workingDirectory.toPath().resolve("%d.features.csv").toAbsolutePath().toString();
+		String labelFilesMatcher = this.workingDirectory.toPath().resolve("%d.labels.csv").toAbsolutePath().toString();
+
 		// ----- Load the training data -----
-		SequenceRecordReader trainFeatures = new CSVSequenceRecordReader(0,",");
-		
-		trainFeatures.initialize(new NumberedFileInputSplit(featureFilesMatcher , 0, fileCount - 2));
-		SequenceRecordReader trainLabels = new CSVSequenceRecordReader(0,",");
+		SequenceRecordReader trainFeatures = new CSVSequenceRecordReader(0, ",");
+
+		trainFeatures.initialize(new NumberedFileInputSplit(featureFilesMatcher, 0, fileCount - 2));
+		SequenceRecordReader trainLabels = new CSVSequenceRecordReader(0, ",");
 		trainLabels.initialize(new NumberedFileInputSplit(labelFilesMatcher, 0, fileCount - 2));
 
 		int miniBatchSize = 10;
 		int numberOfPossibleLabels = 2;
 		boolean doRegression = false;
-		
+
 		DataSetIterator trainData = new SequenceRecordReaderDataSetIterator(trainFeatures, trainLabels, miniBatchSize,
 				numberOfPossibleLabels, doRegression, AlignmentMode.ALIGN_END);
-		
-		
 
 		// Normalize the training data
 		DataNormalization normalizer = new NormalizerStandardize();
@@ -126,17 +107,16 @@ public class EndToEndTest {
 		// ----- Load the test data -----
 		// Same process as for the training data.
 		SequenceRecordReader testFeatures = new CSVSequenceRecordReader();
-		testFeatures
-				.initialize(new NumberedFileInputSplit(featureFilesMatcher, 0, fileCount - 1));
+		testFeatures.initialize(new NumberedFileInputSplit(featureFilesMatcher, 0, fileCount - 1));
 		SequenceRecordReader testLabels = new CSVSequenceRecordReader();
 		testLabels.initialize(new NumberedFileInputSplit(labelFilesMatcher, 0, fileCount - 1));
 
 		DataSetIterator testData = new SequenceRecordReaderDataSetIterator(testFeatures, testLabels, miniBatchSize,
 				numberOfPossibleLabels, false, SequenceRecordReaderDataSetIterator.AlignmentMode.ALIGN_END);
 
-		//testData.setPreProcessor(normalizer); // Note that we are using the exact same normalization process as the
-												// training data
-		
+		// testData.setPreProcessor(normalizer); // Note that we are using the exact
+		// same normalization process as the
+		// training data
 
 		// ----- Configure the network -----
 		MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder().seed(123) // Random number generator seed
@@ -174,11 +154,81 @@ public class EndToEndTest {
 
 		log.info("----- Example Complete -----");
 
+		return result;
 	}
 
-	@Configuration
-	static class TestConfig {
+	public List<GraphiteMultiSeries> getPositiveTrainingExamples() {
+		return positiveTrainingExamples;
+	}
 
+	public SimpleStateClassifier setPositiveTrainingExamples(List<GraphiteMultiSeries> positiveTrainingExamples) {
+		this.positiveTrainingExamples = positiveTrainingExamples;
+		return this;
+	}
+
+	public List<GraphiteMultiSeries> getNegativeTrainingExamples() {
+		return negativeTrainingExamples;
+	}
+
+	public SimpleStateClassifier setNegativeTrainingExamples(List<GraphiteMultiSeries> negativeTrainingExamples) {
+		this.negativeTrainingExamples = negativeTrainingExamples;
+		return this;
+	}
+
+	public List<GraphiteMultiSeries> getPositiveTestingExamples() {
+		return positiveTestingExamples;
+	}
+
+	public void setPositiveTestingExamples(List<GraphiteMultiSeries> positiveTestingExamples) {
+		this.positiveTestingExamples = positiveTestingExamples;
+	}
+
+	public List<GraphiteMultiSeries> getNegativeTestingExamples() {
+		return negativeTestingExamples;
+	}
+
+	public void setNegativeTestingExamples(List<GraphiteMultiSeries> negativeTestingExamples) {
+		this.negativeTestingExamples = negativeTestingExamples;
+	}
+
+	public File getWorkingDirectory() {
+		return workingDirectory;
+	}
+
+	public SimpleStateClassifier setWorkingDirectory(File workingDirectory) {
+		this.workingDirectory = workingDirectory;
+		return this;
+	}
+
+	public int getMiniBatchSize() {
+		return miniBatchSize;
+	}
+
+	public SimpleStateClassifier setMiniBatchSize(int miniBatchSize) {
+		this.miniBatchSize = miniBatchSize;
+		return this;
+	}
+
+	public boolean isDoRegression() {
+		return doRegression;
+	}
+
+	public SimpleStateClassifier setDoRegression(boolean doRegression) {
+		this.doRegression = doRegression;
+		return this;
+	}
+
+	public int getNumberOfIterations() {
+		return numberOfIterations;
+	}
+
+	public void setNumberOfIterations(int numberOfIterations) {
+		this.numberOfIterations = numberOfIterations;
+	}
+
+	class TrainingResult {
+		MultiLayerNetwork network;
+		Evaluation evaluation;
 	}
 
 }

@@ -4,13 +4,13 @@
 	<artifactId>graphite-dl4j</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<name>graphite-dl4j</name>
-	<url>https://github.com/savantly-net/datavec-graphite</url>
+	<url>https://github.com/savantly-net/graphite-dl4j</url>
 	<scm>
-		<url>https://github.com/savantly-net/datavec-graphite</url>
-		<connection>https://github.com/savantly-net/datavec-graphite.git</connection>
+		<url>https://github.com/savantly-net/graphite-dl4j</url>
+		<connection>https://github.com/savantly-net/graphite-dl4j.git</connection>
 	</scm>
 	<issueManagement>
-		<url>https://github.com/savantly-net/datavec-graphite/issues</url>
+		<url>https://github.com/savantly-net/graphite-dl4j/issues</url>
 		<system>GitHub</system>
 	</issueManagement>
 	<parent>
