@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
@@ -58,6 +59,10 @@ public class GraphiteToCsv {
 		});
 		writer.close();
 	}
+	
+	public CsvResult createFileSequence(List<Pair<String, GraphiteMultiSeries>> series) throws IOException {
+		return createFileSequence(series, 0.75);
+	}
 
 	/**
 	 * 
@@ -65,9 +70,10 @@ public class GraphiteToCsv {
 	 * @return the number of feature/label file pairs
 	 * @throws IOException
 	 */
-	public int createFileSequence(List<Pair<String, GraphiteMultiSeries>> series) throws IOException {
+	public CsvResult createFileSequence(List<Pair<String, GraphiteMultiSeries>> series, double trainPercentage) throws IOException {
 
-		AtomicInteger counter = new AtomicInteger(0);
+		AtomicInteger trainFileCount = new AtomicInteger(0);
+		AtomicInteger counter = new AtomicInteger(1);
 
 		Stream<GraphiteSeries> targetGroupsStream = series.stream().flatMap(s -> {
 			return s.getValue().stream().map(g -> {
@@ -80,9 +86,27 @@ public class GraphiteToCsv {
 		
 		Map<String, List<GraphiteSeries>> targetGroups = targetGroupsStream.collect(Collectors.groupingBy(GraphiteSeries::getTarget));
 		
+		AtomicBoolean createTestData = new AtomicBoolean(false);
+		
+		long trainCount = Math.round(targetGroups.keySet().size() * trainPercentage);
 		targetGroups.forEach((k,g) -> {
-			File featuresFile = new File(this.baseDir, counter.get() + ".features.csv");
-			File labelsFile = new File(this.baseDir, counter.getAndIncrement() + ".labels.csv");
+			String featuresFileName;
+			String labelsFileName;
+			if(!createTestData.get()) {
+				featuresFileName = String.format("%s.%s.%s", counter.get(), "train", "features.csv");
+				labelsFileName = String.format("%s.%s.%s", counter.get(), "train", "labels.csv");
+				if (counter.get() > trainCount ) {
+					createTestData.set(true);
+					counter.set(0);
+				} else {
+					trainFileCount.set(counter.get());
+				}
+			} else {
+				featuresFileName = String.format("%s.%s.%s", counter.get(), "test", "features.csv");
+				labelsFileName = String.format("%s.%s.%s", counter.get(), "test", "labels.csv");
+			}
+			File featuresFile = new File(this.baseDir, featuresFileName);
+			File labelsFile = new File(this.baseDir, labelsFileName);
 			Stream<GraphiteDatapoint> datapointStream = g.stream().flatMap(d -> {
 				return d.getDatapoints().stream();
 			});
@@ -91,6 +115,7 @@ public class GraphiteToCsv {
 				List<GraphiteDatapoint> sortedDataPoints = datapointStream.sorted().filter(d -> d.getValue() != null && !Double.isNaN(d.getValue().doubleValue())).collect(Collectors.toList());
 				AtomicLong dataPointCounter = new AtomicLong(sortedDataPoints.size());
 				if (dataPointCounter.get() > 0) {
+					counter.incrementAndGet();
 					FileWriter labelsWriter = new FileWriter(labelsFile);
 					FileWriter featuresWriter = new FileWriter(featuresFile);
 					sortedDataPoints.forEach(d -> {
@@ -113,7 +138,6 @@ public class GraphiteToCsv {
 					// There were no valid datapoints so we delete the file and decrement the counter
 					featuresFile.delete();
 					labelsFile.delete();
-					counter.decrementAndGet();
 				}
 
 			} catch (IOException e) {
@@ -122,6 +146,21 @@ public class GraphiteToCsv {
 			}
 		});
 		
-		return counter.get();
+		return new CsvResult(trainFileCount.get()-1, counter.get()-1);
+	}
+	
+	public class CsvResult {
+		int trainFileCount;
+		int testFileCount;
+		public CsvResult(int trainFileCount, int testFileCount) {
+			this.trainFileCount = trainFileCount;
+			this.testFileCount = testFileCount;
+		}
+		public int getTrainFileCount() {
+			return trainFileCount;
+		}
+		public int getTestFileCount() {
+			return testFileCount;
+		}
 	}
 }
