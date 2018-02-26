@@ -21,14 +21,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 import net.savantly.learning.graphite.domain.GraphiteMultiSeries;
 
 @RunWith(SpringRunner.class)
-public class TimeSeriesStateClassifierTest {
+public class GraphiteSeriesClassifierTest {
 	
-	private static final Logger log = LoggerFactory.getLogger(TimeSeriesStateClassifierTest.class);
+	private static final Logger log = LoggerFactory.getLogger(GraphiteSeriesClassifierTest.class);
 	
-	@Value("classpath:/data/training/bad_*.json")
+	@Value("classpath:/data/training/graphite/bad_*.json")
 	Resource[] baddies;
 
-	@Value("classpath:/data/training/good_*.json")
+	@Value("classpath:/data/training/graphite/good_*.json")
 	Resource[] goodies;
 
 	@Test
@@ -56,11 +56,12 @@ public class TimeSeriesStateClassifierTest {
 			}
 		});
 		
-		TimeSeriesStateClassifier classifier = TimeSeriesStateClassifier.builder()
+		GraphiteSeriesClassifier classifier = GraphiteSeriesClassifier.builder()
 				.setWorkingDirectory(dir)
 				.setPositiveExamples(positiveTrainingExamples)
 				.setNegativeExamples(negativeTrainingExamples)
 				.setNumberOfIterations(5)
+				.setLearningRate(0.07)
 				.build();
 		
 		MultiLayerNetwork result = classifier.train();
