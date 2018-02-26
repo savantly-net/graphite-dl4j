@@ -2,7 +2,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>graphite-dl4j</artifactId>
-	<version>1.0.0-RELEASE</version>
+	<version>2.0.0-SNAPSHOT</version>
 	<name>graphite-dl4j</name>
 	<url>https://github.com/savantly-net/graphite-dl4j</url>
 	<scm>
@@ -62,6 +62,12 @@
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
 			<version>2.9.4</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>net.savantly</groupId>
+			<artifactId>graphite-client</artifactId>
+			<version>2.1.0-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>

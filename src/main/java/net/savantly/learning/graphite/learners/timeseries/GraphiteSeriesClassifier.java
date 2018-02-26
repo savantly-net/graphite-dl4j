@@ -2,6 +2,8 @@ package net.savantly.learning.graphite.learners.timeseries;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -28,7 +30,7 @@ public class GraphiteSeriesClassifier extends MultiLayerLearnerBase {
 
 	private List<GraphiteMultiSeries> positiveExamples = new ArrayList<>();
 	private List<GraphiteMultiSeries> negativeExamples = new ArrayList<>();
-	private File workingDirectory = new File("./data");
+	private File workingDirectory;
 	private int miniBatchSize = 10;
 	private boolean doRegression = false;
 	private CsvResult filePairCount;
@@ -40,6 +42,9 @@ public class GraphiteSeriesClassifier extends MultiLayerLearnerBase {
 	}
 
 	public GraphiteSeriesClassifier build() throws IOException {
+		if (this.workingDirectory == null) {
+			this.workingDirectory = Files.createDirectories(Paths.get("data")).toFile();
+		}
 		this.filePairCount = createCsvFiles();
 		return this;
 	}
@@ -49,7 +54,7 @@ public class GraphiteSeriesClassifier extends MultiLayerLearnerBase {
 
 		// Add the positive condition examples
 		this.positiveExamples.stream().forEach(g -> {
-			Pair<String, GraphiteMultiSeries> p = Pair.of("0", g);
+			Pair<String, GraphiteMultiSeries> p = Pair.of("1", g);
 			pairs.add(p);
 		});
 
@@ -63,7 +68,7 @@ public class GraphiteSeriesClassifier extends MultiLayerLearnerBase {
 		CsvResult fileCounts = GraphiteToCsv.get(this.workingDirectory.getAbsolutePath()).createFileSequence(pairs);
 
 		Arrays.stream(this.workingDirectory.list()).forEach(f -> {
-			log.info(f);
+			log.trace(f);
 		});
 		return fileCounts;
 	}
@@ -82,7 +87,7 @@ public class GraphiteSeriesClassifier extends MultiLayerLearnerBase {
 					new NumberedFileInputSplit(featuresFilePattern, 1, this.filePairCount.getTrainFileCount()));
 			SequenceRecordReader testLabels = new CSVSequenceRecordReader();
 			testLabels.initialize(
-					new NumberedFileInputSplit(labelsFilePattern, 1, this.filePairCount.getTrainFileCount()));
+					new NumberedFileInputSplit(labelsFilePattern, 1, this.filePairCount.getTestFileCount()));
 
 			DataSetIterator testData = new SequenceRecordReaderDataSetIterator(testFeatures, testLabels, miniBatchSize,
 					numberOfPossibleLabels, false, SequenceRecordReaderDataSetIterator.AlignmentMode.ALIGN_END);

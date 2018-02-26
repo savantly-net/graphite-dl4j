@@ -43,7 +43,7 @@ public class GraphiteMultiSeriesToCsvTest {
 		
 		GraphiteToCsv.get(dir.toAbsolutePath().toString()).createFileSequence(Arrays.asList(series1, series2));
 		Arrays.stream(dir.toFile().list()).forEach(f -> {
-			log.info(f);
+			log.trace(f);
 		});
 		
 	}

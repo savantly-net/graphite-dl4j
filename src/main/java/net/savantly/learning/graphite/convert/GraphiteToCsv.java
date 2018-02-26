@@ -72,7 +72,7 @@ public class GraphiteToCsv {
 	 */
 	public CsvResult createFileSequence(List<Pair<String, GraphiteMultiSeries>> series, double trainPercentage) throws IOException {
 
-		AtomicInteger trainFileCount = new AtomicInteger(0);
+		AtomicInteger filesGeneratedForTraining = new AtomicInteger(0);
 		AtomicInteger counter = new AtomicInteger(1);
 
 		Stream<GraphiteSeries> targetGroupsStream = series.stream().flatMap(s -> {
@@ -88,18 +88,25 @@ public class GraphiteToCsv {
 		
 		AtomicBoolean createTestData = new AtomicBoolean(false);
 		
-		long trainCount = Math.round(targetGroups.keySet().size() * trainPercentage);
+		AtomicLong countToGenerateForTraining = new AtomicLong(Math.round(targetGroups.size() * trainPercentage));
+		if (countToGenerateForTraining.get() == targetGroups.size() && countToGenerateForTraining.get() > 1) {
+			countToGenerateForTraining.decrementAndGet();
+		} else if (countToGenerateForTraining.get() == targetGroups.size()) {
+			throw new RuntimeException("unable to create test data. use a smaller percentage of the data for training");
+		}
 		targetGroups.forEach((k,g) -> {
+			log.trace("counter: {}, trainCount: {}, trainFileCount: {}", counter, countToGenerateForTraining, filesGeneratedForTraining);
 			String featuresFileName;
 			String labelsFileName;
 			if(!createTestData.get()) {
 				featuresFileName = String.format("%s.%s.%s", counter.get(), "train", "features.csv");
 				labelsFileName = String.format("%s.%s.%s", counter.get(), "train", "labels.csv");
-				if (counter.get() > trainCount ) {
+				filesGeneratedForTraining.incrementAndGet();
+				if (counter.get() >= countToGenerateForTraining.get() ) {
 					createTestData.set(true);
 					counter.set(0);
 				} else {
-					trainFileCount.set(counter.get());
+					filesGeneratedForTraining.set(counter.get());
 				}
 			} else {
 				featuresFileName = String.format("%s.%s.%s", counter.get(), "test", "features.csv");
@@ -146,7 +153,7 @@ public class GraphiteToCsv {
 			}
 		});
 		
-		return new CsvResult(trainFileCount.get()-1, counter.get()-1);
+		return new CsvResult(filesGeneratedForTraining.get(), counter.get()-1);
 	}
 	
 	public class CsvResult {
