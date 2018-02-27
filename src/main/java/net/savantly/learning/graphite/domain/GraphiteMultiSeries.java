@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
+import org.nd4j.linalg.dataset.api.DataSet;
+
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -36,4 +38,5 @@ public class GraphiteMultiSeries extends ArrayList<GraphiteSeries> {
 	public static GraphiteMultiSeries from(InputStream json) throws JsonParseException, JsonMappingException, IOException {
 		return mapper.readValue(json, GraphiteMultiSeries.class);
 	}
+	
 }

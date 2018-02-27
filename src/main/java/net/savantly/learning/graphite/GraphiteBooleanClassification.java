@@ -27,6 +27,7 @@ public class GraphiteBooleanClassification {
 	private File workingDirectory;
 	private QueryableGraphiteClient client;
 	private int numberOfIterations = 40;
+	private MultiLayerNetwork network;
 	
 	private GraphiteBooleanClassification() {}
 	
@@ -54,7 +55,12 @@ public class GraphiteBooleanClassification {
 	}
 	
 	public MultiLayerNetwork train() {
-		return this.classifier.train();
+		this.network = this.classifier.train();
+		return this.network;
+	}
+	
+	public void predict(GraphiteQuery<JsonNode> query) {
+		GraphiteMultiSeries graphiteMultiSeries = GraphiteMultiSeries.from(this.client.query(query));
 	}
 
 	public List<GraphiteQuery<JsonNode>> getPositiveQueries() {

@@ -17,7 +17,30 @@ You can use the QueryableGraphiteClient to get positive and negative condition e
 	</dependency>
 
 
-## Example 
+## Quickstart 
+add graphite-dl4j as a dependency to your project.  
+
+This example uses a preconfigured multilayer network to classify a graphite query result as either positive or negative, 
+based on the examples provided to the builder -  
+
+		GraphiteBooleanClassification classifier = GraphiteBooleanClassification.builder()
+				.setWorkingDirectory(Files.createDirectories(Paths.get("target/data")).toFile())
+				.addNegativeQuery(GraphiteQueryBuilder.simpleQuery("alias(constantLine(-1), 'A')"))
+				.addNegativeQuery(GraphiteQueryBuilder.simpleQuery("alias(constantLine(-1), 'B')"))
+				.addPositiveQuery(GraphiteQueryBuilder.simpleQuery("alias(constantLine(1), 'A')"))
+				.addPositiveQuery(GraphiteQueryBuilder.simpleQuery("alias(constantLine(1), 'B')"))
+				.setNumberOfIterations(5)
+				.setClient(GraphiteClientFactory.queryableGraphiteClient(graphiteHost))
+				.build();
+		MultiLayerNetwork network = classifier.train();
+		log.info(network.summary());
+		
+The trained network can then be used to predict the class of a new graphite query result -  
+
+    network.test
+
+
+## Examples 
 
 ### Get json data from graphite query  
 
