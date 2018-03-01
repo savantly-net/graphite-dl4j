@@ -60,11 +60,12 @@ public class GraphiteSeriesClassifierTest {
 				.setWorkingDirectory(dir)
 				.setPositiveExamples(positiveTrainingExamples)
 				.setNegativeExamples(negativeTrainingExamples)
-				.setNumberOfIterations(5)
-				.setLearningRate(0.07)
+				.setNumberOfIterations(3)
+				.setLearningRate(0.007)
 				.build();
 		
 		MultiLayerNetwork result = classifier.train();
+		log.debug(result.summary());
 		
 		//Save the model
         File locationToSave = new File("target/MyMultiLayerNetwork.zip");      //Where to save the network. Note: the file is in .zip format - can be opened externally

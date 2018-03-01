@@ -6,9 +6,11 @@ import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import org.deeplearning4j.eval.Evaluation;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.nd4j.linalg.api.ndarray.INDArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,6 +39,9 @@ public class GraphiteBooleanClassificationTest {
 				.build();
 		MultiLayerNetwork network = classifier.train();
 		log.info(network.summary());
+		
+		INDArray prediction = classifier.evaluate(GraphiteQueryBuilder.simpleQuery("alias(constantLine(1), 'Z')"));
+		log.info(prediction.toString());
 	}
 
 }

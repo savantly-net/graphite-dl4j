@@ -5,25 +5,29 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
+import org.assertj.core.util.Arrays;
 import org.datavec.api.records.reader.SequenceRecordReader;
-import org.datavec.api.records.reader.impl.csv.CSVSequenceRecordReader;
-import org.datavec.api.split.NumberedFileInputSplit;
 import org.deeplearning4j.datasets.datavec.SequenceRecordReaderDataSetIterator;
 import org.deeplearning4j.datasets.datavec.SequenceRecordReaderDataSetIterator.AlignmentMode;
 import org.deeplearning4j.optimize.api.IterationListener;
+import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 import org.nd4j.linalg.dataset.api.preprocessor.DataNormalization;
+import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.primitives.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import net.savantly.learning.graphite.convert.GraphiteToCsv;
-import net.savantly.learning.graphite.convert.GraphiteToCsv.CsvResult;
+import com.google.common.primitives.Ints;
+
+import net.savantly.learning.graphite.convert.GraphiteToDataSet;
 import net.savantly.learning.graphite.domain.GraphiteMultiSeries;
 import net.savantly.learning.graphite.learners.MultiLayerLearnerBase;
+import net.savantly.learning.graphite.sequence.GraphiteSequenceRecordReader;
 
 public class GraphiteSeriesClassifier extends MultiLayerLearnerBase {
 	private static final Logger log = LoggerFactory.getLogger(GraphiteSeriesClassifier.class);
@@ -31,9 +35,19 @@ public class GraphiteSeriesClassifier extends MultiLayerLearnerBase {
 	private List<GraphiteMultiSeries> positiveExamples = new ArrayList<>();
 	private List<GraphiteMultiSeries> negativeExamples = new ArrayList<>();
 	private File workingDirectory;
-	private int miniBatchSize = 10;
+	private int miniBatchSize = 1;
 	private boolean doRegression = false;
-	private CsvResult filePairCount;
+	private double percentTrain = 0.75;
+	private List<Pair<INDArray, INDArray>> trainingData;
+	private List<Pair<INDArray, INDArray>> testingData;
+	private List<Pair<INDArray, INDArray>> allData;
+	private double learningRate;
+	private List<IterationListener> iterationListeners;
+	private int numberOfIterations;
+	private DataNormalization normalizer;
+	private int featureCount;
+private int longestExample;
+	
 
 	private GraphiteSeriesClassifier() { }
 
@@ -45,81 +59,84 @@ public class GraphiteSeriesClassifier extends MultiLayerLearnerBase {
 		if (this.workingDirectory == null) {
 			this.workingDirectory = Files.createDirectories(Paths.get("data")).toFile();
 		}
-		this.filePairCount = createCsvFiles();
+		
+		Pair<Integer, GraphiteMultiSeries>[] multiSeries = 
+				new Pair[this.negativeExamples.size() + this.positiveExamples.size()];
+		
+		final AtomicInteger pairCounter = new AtomicInteger(0);
+		this.negativeExamples.forEach(e -> {
+			multiSeries[pairCounter.getAndIncrement()] = Pair.of(0, e);
+		});
+		this.positiveExamples.forEach(e -> {
+			multiSeries[pairCounter.getAndIncrement()] = Pair.of(1, e);
+		});
+		
+		this.allData = GraphiteToDataSet.toTimeSeriesNDArray(multiSeries);
+		
+		int trainCount = (int) Math.round(percentTrain * this.allData.size()); 
+		
+		if(trainCount == this.allData.size() && trainCount > 1) {
+			trainCount -= 1;
+		} else if (trainCount == 1) {
+			log.warn("Not enough data to do testing");
+		}
+		
+		this.trainingData = this.allData.subList(0, trainCount);
+		this.testingData = this.allData.subList(trainCount, this.allData.size());
+		
+		this.featureCount = this.allData.stream().max((p1,p2) -> {
+			return Ints.compare(p1.getFirst().length(), p2.getFirst().length());
+		}).get().getFirst().length();
+		
 		return this;
 	}
-
-	private CsvResult createCsvFiles() throws IOException {
-		List<Pair<String, GraphiteMultiSeries>> pairs = new ArrayList<>();
-
-		// Add the positive condition examples
-		this.positiveExamples.stream().forEach(g -> {
-			Pair<String, GraphiteMultiSeries> p = Pair.of("1", g);
-			pairs.add(p);
+	
+	// Pads the beginning with the avg value of the row
+	public INDArray reshapeNDArray(INDArray ndArray) {
+		int timeSteps = ndArray.size(1);
+		INDArray replacement = Nd4j.create(1, this.featureCount);
+		double avgValue = ndArray.mean(1).getDouble(0);
+		int missingStepCount = this.featureCount - timeSteps;
+		// Pad the beginning of the replacement array with the avg value of the original array
+		for(int i = 0; i < missingStepCount; i++) {
+			replacement.putScalar(i, avgValue);
+		}
+		for(int i = missingStepCount; i < this.featureCount; i++) {
+			replacement.putScalar(i, ndArray.getDouble(i-missingStepCount));
+		}
+		return replacement;
+	}
+	
+	public DataSetIterator createDataSetIterator(List<Pair<INDArray, INDArray>> dataPairs) {
+		dataPairs.forEach(p->{
+			int timeSteps = p.getLeft().size(1);
+			log.info("{}", p.getLeft().size(1));
+			if(timeSteps != this.featureCount) {
+				if(timeSteps < this.featureCount) {
+					p.setFirst(this.reshapeNDArray(p.getLeft()));
+				}
+			}
 		});
-
-		// Add the negative condition examples
-		this.negativeExamples.stream().forEach(g -> {
-			Pair<String, GraphiteMultiSeries> p = Pair.of("0", g);
-			pairs.add(p);
-		});
-
-		// Write the transformed data to csv files in the dir
-		CsvResult fileCounts = GraphiteToCsv.get(this.workingDirectory.getAbsolutePath()).createFileSequence(pairs);
-
-		Arrays.stream(this.workingDirectory.list()).forEach(f -> {
-			log.trace(f);
-		});
-		return fileCounts;
+		SequenceRecordReader featuresReader = new GraphiteSequenceRecordReader(dataPairs.stream().map(p -> {
+			return p.getFirst();
+		}).collect(Collectors.toList()));
+		
+		SequenceRecordReader labelsReader = new GraphiteSequenceRecordReader(dataPairs.stream().map(p -> {
+			return p.getSecond();
+		}).collect(Collectors.toList()));
+		
+		SequenceRecordReaderDataSetIterator iterator = 
+				new SequenceRecordReaderDataSetIterator(
+						featuresReader, labelsReader, miniBatchSize, this.getNumberOfPossibleLabels(), this.doRegression, AlignmentMode.ALIGN_END);
+		return iterator;
 	}
 
 	public DataSetIterator getTestingDataSets() {
-		try {
-			String featuresFilePattern = this.workingDirectory.toPath().resolve("%d.train.features.csv")
-					.toAbsolutePath().toString();
-			String labelsFilePattern = this.workingDirectory.toPath().resolve("%d.train.labels.csv").toAbsolutePath()
-					.toString();
-
-			// ----- Load the test data -----
-			// Same process as for the training data.
-			SequenceRecordReader testFeatures = new CSVSequenceRecordReader();
-			testFeatures.initialize(
-					new NumberedFileInputSplit(featuresFilePattern, 1, this.filePairCount.getTrainFileCount()));
-			SequenceRecordReader testLabels = new CSVSequenceRecordReader();
-			testLabels.initialize(
-					new NumberedFileInputSplit(labelsFilePattern, 1, this.filePairCount.getTestFileCount()));
-
-			DataSetIterator testData = new SequenceRecordReaderDataSetIterator(testFeatures, testLabels, miniBatchSize,
-					numberOfPossibleLabels, false, SequenceRecordReaderDataSetIterator.AlignmentMode.ALIGN_END);
-			return testData;
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
+		return createDataSetIterator(this.testingData);
 	}
 
 	public DataSetIterator getTrainingDataSets() {
-		try {
-			String featuresFilePattern = this.workingDirectory.toPath().resolve("%d.test.features.csv").toAbsolutePath()
-					.toString();
-			String labelsFilePattern = this.workingDirectory.toPath().resolve("%d.test.labels.csv").toAbsolutePath()
-					.toString();
-
-			// ----- Load the training data -----
-			SequenceRecordReader trainFeatures = new CSVSequenceRecordReader();
-
-			trainFeatures.initialize(
-					new NumberedFileInputSplit(featuresFilePattern, 1, this.filePairCount.getTestFileCount()));
-
-			SequenceRecordReader trainLabels = new CSVSequenceRecordReader();
-			trainLabels.initialize(
-					new NumberedFileInputSplit(labelsFilePattern, 1, this.filePairCount.getTestFileCount()));
-
-			DataSetIterator trainData = new SequenceRecordReaderDataSetIterator(trainFeatures, trainLabels,
-					miniBatchSize, numberOfPossibleLabels, doRegression, AlignmentMode.ALIGN_END);
-			return trainData;
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
+		return createDataSetIterator(this.trainingData);
 	}
 
 	public List<GraphiteMultiSeries> getPostiveExamples() {
@@ -207,6 +224,16 @@ public class GraphiteSeriesClassifier extends MultiLayerLearnerBase {
 	public GraphiteSeriesClassifier setLearningRate(double learningRate) {
 		this.learningRate = learningRate;
 		return this;
+	}
+
+	@Override
+	public int getNumberOfPossibleLabels() {
+		return 2;
+	}
+
+	@Override
+	public int getFeatureCount() {
+		return this.featureCount;
 	}
 
 }

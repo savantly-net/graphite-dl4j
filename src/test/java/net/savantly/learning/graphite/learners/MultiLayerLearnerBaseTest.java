@@ -7,6 +7,8 @@ import org.datavec.api.util.ClassPathResource;
 import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
 import org.junit.Test;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
+import org.nd4j.linalg.dataset.api.preprocessor.DataNormalization;
+import org.nd4j.linalg.dataset.api.preprocessor.NormalizerStandardize;
 
 import net.savantly.learning.graphite.learners.MultiLayerLearnerBase;
 
@@ -26,9 +28,14 @@ public class MultiLayerLearnerBaseTest {
 		int numClasses = 2;
 		int batchSize = 1000;
 		
-		public ExampleLearner() {
-			this.featureCount = 14;
-			this.learningRate = 0.5/14;
+		@Override
+		public int getFeatureCount() {
+			return 14;
+		}
+		
+		@Override
+		public double getLearningRate() {
+			return 0.5/14;
 		}
 
 		@Override
@@ -57,6 +64,21 @@ public class MultiLayerLearnerBaseTest {
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}
+		}
+
+		@Override
+		public int getNumberOfPossibleLabels() {
+			return 2;
+		}
+
+		@Override
+		public int getNumberOfIterations() {
+			return 40;
+		}
+
+		@Override
+		public DataNormalization getNormalizer() {
+			return new NormalizerStandardize();
 		}
 
 	}

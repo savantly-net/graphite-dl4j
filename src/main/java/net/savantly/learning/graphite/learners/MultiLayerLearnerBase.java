@@ -17,26 +17,22 @@ public abstract class MultiLayerLearnerBase implements MultiLayerLearner {
 
 	private static final Logger log = LoggerFactory.getLogger(MultiLayerLearnerBase.class);
 
-	protected int numberOfPossibleLabels = 2;
-	protected int numberOfIterations = 40;
-	protected DataNormalization normalizer = new NormalizerStandardize();
-	protected List<IterationListener> iterationListeners = new ArrayList<>();
-	protected double learningRate = 0.005;
-	protected int featureCount = 1;
+	private DataNormalization normalizer = new NormalizerStandardize();
+	private List<IterationListener> iterationListeners = new ArrayList<>();
 
 	public MultiLayerConfiguration createNetworkConfiguration() {
-		return CommonNetworkConfigurations.simpleClassification(featureCount, numberOfPossibleLabels, learningRate);
+		log.info("features: {}", this.getFeatureCount());
+		return CommonNetworkConfigurations.simpleClassification(this.getFeatureCount(),
+				this.getNumberOfPossibleLabels(), this.getLearningRate());
 	}
 
 	public MultiLayerNetwork train() {
 
 		DataSetIterator trainData = getTrainingDataSets();
+		
+		normalizer.fit(trainData);
 
-		// Normalize the training data
-		normalizer.fit(trainData); // Collect training data statistics
-		trainData.reset();
-
-		// Use previously collected statistics to normalize on-the-fly. Each DataSet
+		// Each DataSet
 		// returned by 'trainData' iterator will be normalized
 		trainData.setPreProcessor(normalizer);
 
@@ -53,14 +49,18 @@ public abstract class MultiLayerLearnerBase implements MultiLayerLearner {
 
 		// ----- Train the network, evaluating the test set performance at each epoch
 		// -----
-		int nEpochs = this.numberOfIterations;
+		int nEpochs = this.getNumberOfIterations();
 		String str = "Test set evaluation at epoch %d: Accuracy = %.2f, F1 = %.2f";
 		for (int i = 0; i < nEpochs; i++) {
 			net.fit(trainData);
 
-			// Evaluate on the test set:
-			Evaluation evaluation = net.evaluate(testData);
-			log.info(String.format(str, i, evaluation.accuracy(), evaluation.f1()));
+			if (!testData.hasNext()) {
+				log.warn("there are no examples to test");
+			} else {
+				// Evaluate on the test set:
+				Evaluation evaluation = net.evaluate(testData);
+				log.info(String.format(str, i, evaluation.accuracy(), evaluation.f1()));
+			}
 
 			testData.reset();
 			trainData.reset();
@@ -70,4 +70,18 @@ public abstract class MultiLayerLearnerBase implements MultiLayerLearner {
 
 		return net;
 	}
+
+	public abstract int getNumberOfPossibleLabels();
+
+	public abstract int getNumberOfIterations();
+
+	public abstract DataNormalization getNormalizer();
+
+	public List<IterationListener> getIterationListeners() {
+		return iterationListeners;
+	}
+
+	public abstract double getLearningRate();
+
+	public abstract int getFeatureCount();
 }
