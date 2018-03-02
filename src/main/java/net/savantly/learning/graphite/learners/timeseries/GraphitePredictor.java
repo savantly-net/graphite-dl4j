@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.nd4j.linalg.api.ndarray.INDArray;
+import org.nd4j.linalg.dataset.DataSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,12 +23,12 @@ public class GraphitePredictor {
 
 	private QueryableGraphiteClient client;
 	private List<GraphiteQuery<String>> trainingQueries = new ArrayList<>();
-	private List<INDArray> trainingData = new ArrayList<>();
+	private List<DataSet> trainingData = new ArrayList<>();
 	private RegressionNetwork network;
 
-	private int epochs = 5;
+	private int epochs = 20;
 	private double learningRate = 0.07;
-	private int miniBatchSize = 100;
+	private int miniBatchSize = 1;
 	
 	public static GraphitePredictor builder() {
 		return new GraphitePredictor();
@@ -44,8 +45,8 @@ public class GraphitePredictor {
 		}
 		if (this.trainingData.isEmpty()) {
 			for (GraphiteQuery<String> graphiteQuery : trainingQueries) {
-				List<INDArray> array = new GraphiteCsv(client.query(graphiteQuery)).asINDArray();
-				this.trainingData.addAll(array);
+				DataSet ds = new GraphiteCsv(client.query(graphiteQuery)).asDataSet3d();
+				this.trainingData.add(ds);
 			}
 		}
 		
@@ -89,20 +90,20 @@ public class GraphitePredictor {
 		return this;
 	}
 
-	public List<INDArray> getTrainingData() {
+	public List<DataSet> getTrainingData() {
 		return trainingData;
 	}
 
 	// Preload the data - this will prevent the queries from being executed
-	public GraphitePredictor addTrainingData(INDArray... trainingData) {
-		for (INDArray indArray : trainingData) {
-			this.trainingData.add(indArray);
+	public GraphitePredictor addTrainingData(DataSet... trainingData) {
+		for (DataSet ds : trainingData) {
+			this.trainingData.add(ds);
 		}
 		return this;
 	}
 	// Preload the data - this will prevent the queries from being executed
-	public GraphitePredictor addTrainingData(Collection<INDArray> trainingData) {
-		this.trainingData.addAll(trainingData);
+	public GraphitePredictor addTrainingData(DataSet trainingData) {
+		this.trainingData.add(trainingData);
 		return this;
 	}
 

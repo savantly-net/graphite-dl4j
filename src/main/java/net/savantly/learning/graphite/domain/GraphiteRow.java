@@ -3,7 +3,7 @@ package net.savantly.learning.graphite.domain;
 
 import org.joda.time.DateTime;
 
-public class GraphiteRow {
+public class GraphiteRow implements Comparable<GraphiteRow> {
 	
 	private String target;
 	private float value;
@@ -29,6 +29,11 @@ public class GraphiteRow {
 	}
 	public DateTime getEpoch() {
 		return epoch;
+	}
+
+	@Override
+	public int compareTo(GraphiteRow o) {
+		return this.getEpoch().compareTo(o.getEpoch());
 	}
 
 }

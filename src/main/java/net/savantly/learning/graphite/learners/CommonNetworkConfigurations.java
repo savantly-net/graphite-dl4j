@@ -93,7 +93,7 @@ public class CommonNetworkConfigurations {
                                 .activation(Activation.SOFTSIGN).build())
                 .layer(1, new RnnOutputLayer.Builder(LossFunction.MCXENT).activation(Activation.SOFTMAX)        //MCXENT + softmax for classification
                                 .nIn(hiddenLayerWidth).nOut(numOutputs).build())
-    //.backpropType(BackpropType.TruncatedBPTT).tBPTTForwardLength(tbpttLength  ).tBPTTBackwardLength(tbpttLength)
+                .backpropType(BackpropType.TruncatedBPTT).tBPTTForwardLength(tbpttLength  ).tBPTTBackwardLength(tbpttLength)
                 .pretrain(false).backprop(true)
                 .build();
 		return conf;
