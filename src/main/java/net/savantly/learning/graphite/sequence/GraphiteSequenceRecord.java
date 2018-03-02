@@ -12,6 +12,8 @@ import org.nd4j.linalg.api.ndarray.INDArray;
 public class GraphiteSequenceRecord implements SequenceRecord {
 	
 	private List<List<Writable>> record = new ArrayList<List<Writable>>();
+	
+	public GraphiteSequenceRecord() {}
 
 	public GraphiteSequenceRecord(INDArray array) {
 		for(int i = 0; i < array.rows(); i++) {

@@ -29,6 +29,8 @@ public class GraphiteSequenceRecordReader implements SequenceRecordReader {
 	private List<GraphiteSequenceRecord> sequenceRecords = new ArrayList<>();
 
 	private List<RecordListener> recordListeners;
+	
+	private GraphiteSequenceRecordReader() {}
 
 	public GraphiteSequenceRecordReader(List<INDArray> listOfFeaturesValuesPairs) {
 		listOfFeaturesValuesPairs.stream().forEach(a -> {
@@ -39,6 +41,21 @@ public class GraphiteSequenceRecordReader implements SequenceRecordReader {
 				throw new RuntimeException("Empty sequence!");
 			}
 		});
+	}
+	
+	static public GraphiteSequenceRecordReader fromWritableSequence(List<List<List<Writable>>> writables) {
+		GraphiteSequenceRecordReader instance = new GraphiteSequenceRecordReader();
+		writables.stream().forEach(a -> {
+			if(!a.isEmpty()) {
+				GraphiteSequenceRecord record = new GraphiteSequenceRecord();
+				record.setSequenceRecord(a);
+				instance.sequenceRecords.add(record);
+			} else {
+				log.debug("empty sequence?");
+				throw new RuntimeException("Empty sequence!");
+			}
+		});
+		return instance;
 	}
 
 	@Override
@@ -194,5 +211,6 @@ public class GraphiteSequenceRecordReader implements SequenceRecordReader {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
 
 }

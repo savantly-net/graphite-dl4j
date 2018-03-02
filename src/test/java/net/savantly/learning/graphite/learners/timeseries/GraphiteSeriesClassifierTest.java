@@ -12,12 +12,17 @@ import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.util.ModelSerializer;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.nd4j.linalg.api.ndarray.INDArray;
+import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
+import org.nd4j.linalg.indexing.NDArrayIndex;
+import org.nd4j.linalg.primitives.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import net.savantly.learning.graphite.convert.GraphiteToDataSet;
 import net.savantly.learning.graphite.domain.GraphiteMultiSeries;
 
 @RunWith(SpringRunner.class)
@@ -60,17 +65,39 @@ public class GraphiteSeriesClassifierTest {
 				.setWorkingDirectory(dir)
 				.setPositiveExamples(positiveTrainingExamples)
 				.setNegativeExamples(negativeTrainingExamples)
-				.setNumberOfIterations(3)
+				.setNumberOfIterations(5)
 				.setLearningRate(0.007)
+				.setDoRegression(true)
 				.build();
 		
-		MultiLayerNetwork result = classifier.train();
-		log.debug(result.summary());
+		MultiLayerNetwork net = classifier.train();
+		log.debug(net.summary());
+		
+		boolean shouldBePositive = testSample(classifier, net, positiveTrainingExamples);
+		boolean shouldBeNegative = testSample(classifier, net, negativeTrainingExamples);
+
 		
 		//Save the model
         File locationToSave = new File("target/MyMultiLayerNetwork.zip");      //Where to save the network. Note: the file is in .zip format - can be opened externally
         boolean saveUpdater = true;                                             //Updater: i.e., the state for Momentum, RMSProp, Adagrad etc. Save this if you want to train your network more in the future
-        ModelSerializer.writeModel(result, locationToSave, saveUpdater);
+        ModelSerializer.writeModel(net, locationToSave, saveUpdater);
+	}
+
+	private boolean testSample(GraphiteSeriesClassifier classifier, MultiLayerNetwork net, List<GraphiteMultiSeries> exampleList) {
+		Pair[] pairs = new Pair[]{ Pair.of(0, exampleList.get(0))};
+		
+		List<Pair<INDArray, INDArray>> testPairs = GraphiteToDataSet
+				.toTimeSeriesNDArrayPairs(pairs);
+		DataSetIterator posIter = classifier.createDataSetIterator(testPairs);
+	    INDArray timeSeriesOutput = net.output(posIter);
+	    int timeSeriesLength = timeSeriesOutput.size(2);
+	    
+	    INDArray lastTimeStepProbabilities = timeSeriesOutput.get(NDArrayIndex.point(0), NDArrayIndex.all(), NDArrayIndex.point(timeSeriesLength-1));
+	    log.debug(lastTimeStepProbabilities.toString());
+	    
+	    INDArray rnnTimeStep = net.rnnTimeStep(testPairs.get(0).getLeft());
+	    
+		return false;
 	}
 
 }

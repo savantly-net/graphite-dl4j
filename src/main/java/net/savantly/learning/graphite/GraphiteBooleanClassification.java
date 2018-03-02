@@ -6,10 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.assertj.core.util.Arrays;
-import org.deeplearning4j.datasets.iterator.impl.ListDataSetIterator;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.nd4j.linalg.api.ndarray.INDArray;
-import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 import org.nd4j.linalg.indexing.NDArrayIndex;
 import org.nd4j.linalg.primitives.Pair;
@@ -34,7 +32,9 @@ public class GraphiteBooleanClassification {
 	private List<GraphiteMultiSeries> negativeTrainingExamples = new ArrayList<>();
 	private List<GraphiteQuery<JsonNode>> positiveQueries = new ArrayList<>();
 	private List<GraphiteQuery<JsonNode>> negativeQueries = new ArrayList<>();
-	private GraphiteSeriesClassifier classifier = GraphiteSeriesClassifier.builder();
+	private GraphiteSeriesClassifier classifier = GraphiteSeriesClassifier
+			.builder()
+			.setDoRegression(false);
 	private File workingDirectory;
 	private QueryableGraphiteClient client;
 	private int numberOfIterations = 40;
@@ -57,8 +57,12 @@ public class GraphiteBooleanClassification {
 		for (GraphiteQuery<JsonNode> graphiteQuery : positiveQueries) {
 			this.positiveTrainingExamples.add(GraphiteMultiSeries.from(client.query(graphiteQuery)));
 		}
-		this.classifier.setWorkingDirectory(workingDirectory).setNumberOfIterations(numberOfIterations)
-				.setNegativeExamples(negativeTrainingExamples).setPositiveExamples(positiveTrainingExamples).build();
+		this.classifier.setWorkingDirectory(workingDirectory)
+			.setNumberOfIterations(numberOfIterations)
+			.setNegativeExamples(negativeTrainingExamples)
+			.setPositiveExamples(positiveTrainingExamples)
+			.setDoRegression(false)
+			.build();
 		return this;
 	}
 
@@ -72,7 +76,7 @@ public class GraphiteBooleanClassification {
 		GraphiteMultiSeries multiSeries = GraphiteMultiSeries.from(this.client.query(query));
 		
 		List<Pair<INDArray, INDArray>> dataPairs = GraphiteToDataSet
-				.toTimeSeriesNDArray(Arrays.array(Pair.of(0, multiSeries)));
+				.toTimeSeriesNDArrayPairs(Arrays.array(Pair.of(0, multiSeries)));
 
 		DataSetIterator dsIterator = classifier.createDataSetIterator(dataPairs);
 

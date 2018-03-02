@@ -9,15 +9,12 @@ import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.optimize.api.IterationListener;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 import org.nd4j.linalg.dataset.api.preprocessor.DataNormalization;
-import org.nd4j.linalg.dataset.api.preprocessor.NormalizerStandardize;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public abstract class MultiLayerLearnerBase implements MultiLayerLearner {
 
 	private static final Logger log = LoggerFactory.getLogger(MultiLayerLearnerBase.class);
-
-	private DataNormalization normalizer = new NormalizerStandardize();
 	private List<IterationListener> iterationListeners = new ArrayList<>();
 
 	public MultiLayerConfiguration createNetworkConfiguration() {
@@ -29,15 +26,17 @@ public abstract class MultiLayerLearnerBase implements MultiLayerLearner {
 	public MultiLayerNetwork train() {
 
 		DataSetIterator trainData = getTrainingDataSets();
-		
-		normalizer.fit(trainData);
-
-		// Each DataSet
-		// returned by 'trainData' iterator will be normalized
-		trainData.setPreProcessor(normalizer);
-
 		DataSetIterator testData = getTestingDataSets();
-		testData.setPreProcessor(normalizer);
+		
+		DataNormalization normalizer = this.getNormalizer();
+		boolean normalize = (this.getNormalizer() != null);
+		if (normalize) {
+			normalizer.fit(trainData);		
+			// Each DataSet
+			// returned by 'trainData' iterator will be normalized
+			trainData.setPreProcessor(normalizer);
+			testData.setPreProcessor(normalizer);
+		}
 
 		// ----- Configure the network -----
 		MultiLayerConfiguration conf = createNetworkConfiguration();

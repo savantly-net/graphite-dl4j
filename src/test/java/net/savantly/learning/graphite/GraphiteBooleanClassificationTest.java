@@ -31,8 +31,8 @@ public class GraphiteBooleanClassificationTest {
 		GraphiteBooleanClassification classifier = GraphiteBooleanClassification.builder()
 				.setWorkingDirectory(Files.createDirectories(Paths.get("target/data")).toFile())
 				.addNegativeQuery(GraphiteQueryBuilder.simpleQuery("alias(constantLine(-1), 'A')"))
-				.addNegativeQuery(GraphiteQueryBuilder.simpleQuery("alias(constantLine(-1), 'B')"))
-				.addPositiveQuery(GraphiteQueryBuilder.simpleQuery("alias(constantLine(1), 'A')"))
+				.addNegativeQuery(GraphiteQueryBuilder.simpleQuery("alias(constantLine(-1), 'A')"))
+				.addPositiveQuery(GraphiteQueryBuilder.simpleQuery("alias(constantLine(1), 'B')"))
 				.addPositiveQuery(GraphiteQueryBuilder.simpleQuery("alias(constantLine(1), 'B')"))
 				.setNumberOfIterations(5)
 				.setClient(GraphiteClientFactory.queryableGraphiteClient(graphiteHost))
@@ -40,8 +40,11 @@ public class GraphiteBooleanClassificationTest {
 		MultiLayerNetwork network = classifier.train();
 		log.info(network.summary());
 		
-		INDArray prediction = classifier.evaluate(GraphiteQueryBuilder.simpleQuery("alias(constantLine(1), 'Z')"));
-		log.info(prediction.toString());
+		INDArray shouldBePositivePrediction = classifier.evaluate(GraphiteQueryBuilder.simpleQuery("alias(constantLine(1), 'Y')"));
+		INDArray shouldBeNegativePrediction = classifier.evaluate(GraphiteQueryBuilder.simpleQuery("alias(constantLine(-1), 'Z')"));
+		
+		log.info("positive: {}, negative: {}", shouldBePositivePrediction, shouldBeNegativePrediction);
+		
 	}
 
 }

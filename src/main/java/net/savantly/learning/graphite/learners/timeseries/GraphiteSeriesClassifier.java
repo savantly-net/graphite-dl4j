@@ -41,13 +41,11 @@ public class GraphiteSeriesClassifier extends MultiLayerLearnerBase {
 	private List<Pair<INDArray, INDArray>> trainingData;
 	private List<Pair<INDArray, INDArray>> testingData;
 	private List<Pair<INDArray, INDArray>> allData;
-	private double learningRate;
+	private double learningRate = 0.007;
 	private List<IterationListener> iterationListeners;
 	private int numberOfIterations;
 	private DataNormalization normalizer;
 	private int featureCount;
-private int longestExample;
-	
 
 	private GraphiteSeriesClassifier() { }
 
@@ -71,7 +69,7 @@ private int longestExample;
 			multiSeries[pairCounter.getAndIncrement()] = Pair.of(1, e);
 		});
 		
-		this.allData = GraphiteToDataSet.toTimeSeriesNDArray(multiSeries);
+		this.allData = GraphiteToDataSet.toTimeSeriesNDArrayPairs(multiSeries);
 		
 		int trainCount = (int) Math.round(percentTrain * this.allData.size()); 
 		
@@ -110,7 +108,6 @@ private int longestExample;
 	public DataSetIterator createDataSetIterator(List<Pair<INDArray, INDArray>> dataPairs) {
 		dataPairs.forEach(p->{
 			int timeSteps = p.getLeft().size(1);
-			log.info("{}", p.getLeft().size(1));
 			if(timeSteps != this.featureCount) {
 				if(timeSteps < this.featureCount) {
 					p.setFirst(this.reshapeNDArray(p.getLeft()));
@@ -228,7 +225,9 @@ private int longestExample;
 
 	@Override
 	public int getNumberOfPossibleLabels() {
-		return 2;
+		if (this.doRegression) {
+			return this.featureCount;
+		} else return 2;
 	}
 
 	@Override
