@@ -5,14 +5,19 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+import org.datavec.api.util.ndarray.RecordConverter;
+import org.datavec.api.writable.Writable;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.factory.Nd4j;
+import org.nd4j.linalg.primitives.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,16 +62,13 @@ public class GraphiteCsv {
 		return rows;
 	}
 	
-	public int getDim0() {
+	public int getSeriesCount() {
 		return this.rowsGroupedByTarget.size();
 	}
-	public int getDim1() {
+	public int getLongestTimeSteps() {
 		return this.rowsGroupedByTarget.values().stream().map(g->{
 			return g.size();
 		}).max(Ints::compare).get();
-	}
-	public int getDim2() {
-		return 1;
 	}
 	
 	// Values only
@@ -92,11 +94,34 @@ public class GraphiteCsv {
 		return ndArrays;
 	}
 	
+	// Values only
+	// each unique 'target' is an instance of INDArray
+	// Each INDArray is shaped [1,$timesteps]
+	public List<INDArray> asINDArray3d() {
+		List<INDArray> ndArrays = new ArrayList<>();
+
+		this.rowsGroupedByTarget.values().stream().forEach(g -> {
+			int timeSteps = g.size();
+			List<Float> values = g.stream().map(r -> {
+				return r.getValue();
+			}).collect(Collectors.toList());
+
+			INDArray ndArray = Nd4j.create(new int[]{1,1,timeSteps}, 'c');
+			ndArrays.add(ndArray);
+
+			for (int i=0; i<values.size(); i++) {
+				ndArray.putScalar(0,0,i, values.get(i));
+			}
+		});
+		
+		return ndArrays;
+	}
+	
 	// the epoch of each row becomes the feature
 	// the value becomes the label.
 	// each unique 'target' is a layer in 3d INDArray
 	public DataSet asDataSet3d() {
-		int[] shape = new int[] {this.getDim0(), this.getDim1(), this.getDim2()};
+		int[] shape = new int[] {this.getSeriesCount(), this.getLongestTimeSteps(), 1};
 		INDArray features = Nd4j.create(shape);
 		INDArray labels = Nd4j.create(shape);
 		
@@ -113,5 +138,139 @@ public class GraphiteCsv {
 		
 		return new DataSet(features, labels);
 	}
+	
+	// the epoch of each row becomes the feature
+	// the value becomes the label.
+	// each unique 'target' is stored in the zeroth dimension
+	// shape = [targetCount, 1, timestepcount]
+	public DataSet as3dSequence() {
+		int[] shape = new int[] {this.getSeriesCount(), 1, this.getLongestTimeSteps()};
+		INDArray features = Nd4j.create(shape);
+		INDArray labels = Nd4j.create(shape);
+		
+		AtomicInteger sequenceGroupCounter = new AtomicInteger(0);
+		this.rowsGroupedByTarget.values().stream().forEach(g -> {
+			AtomicInteger timeStepCounter = new AtomicInteger(0);
+			g.stream().sorted().forEach(r -> {
+				features.putScalar(sequenceGroupCounter.get(), 0, timeStepCounter.get(), r.getEpoch().getMillis());
+				labels.putScalar(sequenceGroupCounter.get(), 0, timeStepCounter.get(), r.getValue());
+				timeStepCounter.getAndIncrement();
+			});
+			sequenceGroupCounter.incrementAndGet();
+		});
+		
+		return new DataSet(features, labels);
+	}
+	
+	public List<List<List<Writable>>> asRecords(int lagSize) {
+		return asRecords(lagSize, true);
+	}
+	
+	// lagSize is how many values to use as features [lag window style]
+	// default is 1
+	public List<List<List<Writable>>> asRecords(int lagSize, boolean includeLabels) {
+		List<List<List<Writable>>> results = new ArrayList<>();
+		for (DataSet ds : this.asDataSetLagWindow(lagSize)) {
+			if (!includeLabels) {
+				results.add(RecordConverter.toRecords(ds.getFeatureMatrix()));
+			} else {
+				results.add(RecordConverter.toRecords(ds));
+			}
+		}
+		return results;
+	}
+	
+	// the epoch of each row becomes the feature
+	// the value becomes the label.
+	// each unique 'target' is a DataSet in the list
+	public List<DataSet> asDataSetList() {
+		List<DataSet> dsList = new ArrayList<>();
+		this.rowsGroupedByTarget.values().stream().forEach(g -> {
+			List<Pair<Long, Float>> values = g.stream().map(r -> {
+				return Pair.of(r.getEpoch().getMillis(), r.getValue());
+			}).collect(Collectors.toList());
+			
+
+			INDArray features = Nd4j.create(new int[] {this.getLongestTimeSteps(), 1}, 'c');
+			INDArray labels = Nd4j.create(new int[] {this.getLongestTimeSteps(), 1}, 'c');
+			INDArray mask = Nd4j.zeros(new int[] {this.getLongestTimeSteps(), 1}, 'c');
+			
+			for (int i=0; i<values.size(); i++) {
+				features.put(i, 0, values.get(i).getFirst());
+				labels.put(i, 0, values.get(i).getSecond());
+				mask.put(i, 0, 1);
+			}
+			DataSet ds = new DataSet(features, labels, mask, mask);
+			dsList.add(ds);
+		});
+		
+		return dsList;
+	}
+	
+	// the previous values become the features for the current value
+	// the current value becomes the label
+	// each unique 'target' is a DataSet in the list
+	public List<DataSet> asDataSetLagWindow(int windowSize) {
+		int skipSize = (windowSize*2);
+		int timeSteps = this.getLongestTimeSteps() - (skipSize);
+		if (timeSteps < 1) {
+			throw new RuntimeException("there are not enough records to create a lag");
+		}
+		List<DataSet> dsList = new ArrayList<>();
+		this.rowsGroupedByTarget.values().stream().forEach(g -> {
+			List<Pair<Long, Float>> values = g.stream().map(r -> {
+				return Pair.of(r.getEpoch().getMillis(), r.getValue());
+			}).collect(Collectors.toList());
+			
+
+			INDArray features = Nd4j.create(new int[] {timeSteps, windowSize}, 'c');
+			INDArray labels = Nd4j.create(new int[] {timeSteps, 1}, 'c');
+			INDArray mask = Nd4j.zeros(new int[] {timeSteps, 1}, 'c');
+			
+			LinkedList<Float> queue = new LinkedList<>();
+			for (int i=0; i<values.size(); i++) {
+				float value = values.get(i).getValue();
+				queue.push(value);
+				if(queue.size() > windowSize) {
+					for(int j=windowSize; j>0; j--) {
+						try {
+						features.put(i-skipSize, j-1, queue.get(j));
+						} catch (Exception e) {
+							log.error("{}", e);
+						}
+					}
+					queue.removeLast();
+					labels.put(i-skipSize, 0, value);
+					mask.put(i-skipSize, 0, 1);
+				}
+			}
+			DataSet ds = new DataSet(features, labels);
+			dsList.add(ds);
+		});
+		
+		return dsList;
+	}
+	
+    public INDArray as3dMatrix(int lagSize, boolean includeLabels) {
+    	List<List<List<Writable>>> sequenceList = this.asRecords(lagSize, includeLabels);
+    	
+    	int sequenceSize = sequenceList.size();
+    	
+    	INDArray matrix2d = RecordConverter.toMatrix(sequenceList.get(0));
+    	
+    	int featureSize = matrix2d.size(1);
+    	int timeStepSize = matrix2d.size(0);
+    	INDArray features = Nd4j.create(new int[] {sequenceSize, featureSize, timeStepSize});
+    	
+    	for (int i = 0; i < sequenceList.size(); i++) {
+			for (int j = 0; j < featureSize; j++) {
+				for (int k = 0; k < timeStepSize; k++) {
+					features.putScalar(i, j, k, matrix2d.getFloat(k, j));
+				}
+			}
+		}
+        return features;
+    }
+
 
 }

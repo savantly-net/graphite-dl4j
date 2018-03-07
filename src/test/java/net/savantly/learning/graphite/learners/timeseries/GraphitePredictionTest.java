@@ -1,11 +1,14 @@
 package net.savantly.learning.graphite.learners.timeseries;
 
 import java.io.IOException;
+import java.util.List;
 
+import org.datavec.api.util.ndarray.RecordConverter;
+import org.datavec.api.writable.Writable;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.nd4j.linalg.dataset.DataSet;
+import org.nd4j.linalg.api.ndarray.INDArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,25 +22,36 @@ public class GraphitePredictionTest {
 
 private static final Logger log = LoggerFactory.getLogger(GraphitePredictionTest.class);
 	
-	@Value("classpath:/data/training/graphitePrediction/average_response_time.csv")
+	@Value("classpath:/data/training/graphitePrediction/randomWalk01.csv")
 	Resource exampleFile;
+	@Value("classpath:/data/training/graphitePrediction/randomWalk02.csv")
+	Resource exampleFile2;
 
 	@Test
 	public void test() throws IOException {
-		DataSet trainingData = GraphiteCsv.from(exampleFile.getFile()).asDataSet3d();
+		final int lagSize = 2;
+		List<List<List<Writable>>> trainingData = GraphiteCsv.from(exampleFile.getFile()).asRecords(lagSize);
 		GraphitePredictor predictor = GraphitePredictor.builder()
-				.addTrainingData(trainingData)
-				.setMiniBatchSize(1)
-				.setEpochs(100)
-				
+				.setTrainingData(trainingData)
+				.setEpochs(10)
+				.setLearningRate(0.05)
+				.setNumOfInputs(lagSize)
 				.build();
 		MultiLayerNetwork network = predictor.train();
 		log.info(network.summary());
 		
+		// example for prediction based on new data
+		boolean includeLabels = false;
+		INDArray testingData = GraphiteCsv.from(exampleFile2.getFile()).as3dMatrix(lagSize, includeLabels);
 		// How many timesteps do we want to predict past the end of our data
-/*		int timeSteps = 1;
-		log.info(predictor.doTimeStep(timeSteps).toString());
-		log.info(predictor.predict(timeSteps).toString());*/
+		int timeSteps = 30;
+		
+		float[] predictedValues = predictor.doTimeStep(timeSteps, testingData);
+		for (int i = 0; i < predictedValues.length; i++) {
+			String formatted = String.format("timestep: %s: %s\n", i, predictedValues[i]);
+			log.info(formatted);
+		}
+		//log.info(predictor.predict(timeSteps).toString());
 		
 	}
 }

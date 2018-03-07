@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.datavec.api.writable.Writable;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
@@ -23,12 +24,16 @@ public class GraphitePredictor {
 
 	private QueryableGraphiteClient client;
 	private List<GraphiteQuery<String>> trainingQueries = new ArrayList<>();
-	private List<DataSet> trainingData = new ArrayList<>();
+	private Collection<? extends Collection<? extends Collection<Writable>>> trainingData;
 	private RegressionNetwork network;
 
 	private int epochs = 20;
 	private double learningRate = 0.07;
 	private int miniBatchSize = 1;
+
+	private int windowSize;
+
+	private int numOfInputs;
 	
 	public static GraphitePredictor builder() {
 		return new GraphitePredictor();
@@ -43,25 +48,26 @@ public class GraphitePredictor {
 				throw new RuntimeException(e);
 			}
 		}
-		if (this.trainingData.isEmpty()) {
+		if (this.trainingData == null) {
+			List<DataSet> dsList = new ArrayList<>();
 			for (GraphiteQuery<String> graphiteQuery : trainingQueries) {
-				DataSet ds = new GraphiteCsv(client.query(graphiteQuery)).asDataSet3d();
-				this.trainingData.add(ds);
+				List<DataSet> ds = new GraphiteCsv(client.query(graphiteQuery)).asDataSetLagWindow(windowSize);
+				dsList.addAll(ds);
 			}
 		}
 		
 		this.network = RegressionNetwork.builder()
 				.setEpochs(epochs)
 				.setLearningRate(learningRate)
-				.setMiniBatchSize(miniBatchSize)
 				.setTrainingData(trainingData)
+				.setNumOfInputs(numOfInputs)
 				.build();
 		
 		return this;
 	}
 	
-	public INDArray doTimeStep(int timeSteps) {
-		return this.network.rnnTimeStep(timeSteps);
+	public float[] doTimeStep(int timeSteps, INDArray testingData) {
+		return this.network.rnnTimeStep(timeSteps, testingData);
 	}
 	
 	public INDArray predict(int timeSteps) {
@@ -90,20 +96,13 @@ public class GraphitePredictor {
 		return this;
 	}
 
-	public List<DataSet> getTrainingData() {
+	public Collection<? extends Collection<? extends Collection<Writable>>> getTrainingData() {
 		return trainingData;
 	}
 
 	// Preload the data - this will prevent the queries from being executed
-	public GraphitePredictor addTrainingData(DataSet... trainingData) {
-		for (DataSet ds : trainingData) {
-			this.trainingData.add(ds);
-		}
-		return this;
-	}
-	// Preload the data - this will prevent the queries from being executed
-	public GraphitePredictor addTrainingData(DataSet trainingData) {
-		this.trainingData.add(trainingData);
+	public GraphitePredictor setTrainingData(Collection<? extends Collection<? extends Collection<Writable>>> indArray) {
+		this.trainingData = indArray;
 		return this;
 	}
 
@@ -122,6 +121,24 @@ public class GraphitePredictor {
 
 	public GraphitePredictor setMiniBatchSize(int miniBatchSize) {
 		this.miniBatchSize = miniBatchSize;
+		return this;
+	}
+
+	public double getLearningRate() {
+		return learningRate;
+	}
+
+	public GraphitePredictor setLearningRate(double learningRate) {
+		this.learningRate = learningRate;
+		return this;
+	}
+
+	public int getNumOfInputs() {
+		return numOfInputs;
+	}
+
+	public GraphitePredictor setNumOfInputs(int numOfInputs) {
+		this.numOfInputs = numOfInputs;
 		return this;
 	}
 

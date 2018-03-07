@@ -10,6 +10,7 @@ import org.deeplearning4j.nn.conf.layers.DenseLayer;
 import org.deeplearning4j.nn.conf.layers.GravesLSTM;
 import org.deeplearning4j.nn.conf.layers.OutputLayer;
 import org.deeplearning4j.nn.conf.layers.RnnOutputLayer;
+import org.deeplearning4j.nn.conf.preprocessor.RnnToFeedForwardPreProcessor;
 import org.deeplearning4j.nn.weights.WeightInit;
 import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
@@ -77,23 +78,22 @@ public class CommonNetworkConfigurations {
 		return conf;
 	}
 	
-	public static MultiLayerConfiguration recurrentNetwork(int numInputs, int numOutputs, double learningRate, int miniBatchIterations) {
-		int hiddenLayerWidth = 1000;
-        int tbpttLength = 1000;
+	public static MultiLayerConfiguration recurrentNetwork(int numInputs, int hiddenLayerWidth, int numOutputs, double learningRate, int miniBatchIterations) {
+        int tbpttLength = 500;
 		MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
                 .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT).iterations(miniBatchIterations)
                 .learningRate(learningRate)
                 .seed(12345)
                 .regularization(true)
-                .l2(0.001)
-    .weightInit(WeightInit.XAVIER)
-    .updater(Updater.RMSPROP)
+                	.l2(0.001)
+                .weightInit(WeightInit.XAVIER)
+                .updater(Updater.RMSPROP)
                 .list()
-                .layer(0, new GravesLSTM.Builder().nIn(numInputs).nOut(hiddenLayerWidth)
+                    .layer(0, new GravesLSTM.Builder().nIn(numInputs).nOut(hiddenLayerWidth)
                                 .activation(Activation.SOFTSIGN).build())
-                .layer(1, new RnnOutputLayer.Builder(LossFunction.MCXENT).activation(Activation.SOFTMAX)        //MCXENT + softmax for classification
+                    .layer(1, new RnnOutputLayer.Builder(LossFunction.MSE).activation(Activation.IDENTITY)        //MCXENT + softmax for classification
                                 .nIn(hiddenLayerWidth).nOut(numOutputs).build())
-                .backpropType(BackpropType.TruncatedBPTT).tBPTTForwardLength(tbpttLength  ).tBPTTBackwardLength(tbpttLength)
+                .backpropType(BackpropType.TruncatedBPTT).tBPTTForwardLength(tbpttLength).tBPTTBackwardLength(tbpttLength)
                 .pretrain(false).backprop(true)
                 .build();
 		return conf;
