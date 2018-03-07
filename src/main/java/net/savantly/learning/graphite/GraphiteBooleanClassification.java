@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.assertj.core.util.Arrays;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
@@ -75,8 +74,9 @@ public class GraphiteBooleanClassification {
 		
 		GraphiteMultiSeries multiSeries = GraphiteMultiSeries.from(this.client.query(query));
 		
+		@SuppressWarnings("unchecked")
 		List<Pair<INDArray, INDArray>> dataPairs = GraphiteToDataSet
-				.toTimeSeriesNDArrayPairs(Arrays.array(Pair.of(0, multiSeries)));
+				.toTimeSeriesNDArrayPairs(new Pair[] {Pair.of(0, multiSeries)});
 
 		DataSetIterator dsIterator = classifier.createDataSetIterator(dataPairs);
 
