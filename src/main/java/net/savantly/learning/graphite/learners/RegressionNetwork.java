@@ -1,7 +1,9 @@
 package net.savantly.learning.graphite.learners;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 
 import org.datavec.api.records.reader.SequenceRecordReader;
 import org.datavec.api.records.reader.impl.collection.CollectionSequenceRecordReader;
@@ -32,8 +34,11 @@ public class RegressionNetwork {
 	private Collection<? extends Collection<? extends Collection<Writable>>> trainingData;
 	private DataNormalization normalizer;
 	private int numOfInputs = 1;
+	private final List<IterationListener> iterationListeners = new ArrayList<>();
 
 	protected RegressionNetwork() {
+		this.iterationListeners.add(new PerformanceListener(1000));
+		this.iterationListeners.add(new ScoreIterationListener(1000));
 	}
 
 	public static RegressionNetwork builder() {
@@ -47,16 +52,19 @@ public class RegressionNetwork {
 		this.trainingData = this.initialData;
 		this.network = new MultiLayerNetwork(getNetworkConfiguration());
 		this.network.init();
-		this.network.setListeners(
-				new IterationListener[] { new ScoreIterationListener(1000), new PerformanceListener(1000) });
+		this.network.setListeners(this.getListeners());
 
 		return this;
 	}
+	
+	private IterationListener[] getListeners() {
+		return this.iterationListeners.toArray(new IterationListener[0]);
+	}
 
 	public MultiLayerNetwork train() {
-
 		DataSetIterator trainIterator = getDataSetIterator(this.trainingData, this.miniBatchSize);
 		normalizer = new NormalizerStandardize();
+		normalizer.fitLabel(true);
 		normalizer.fit(trainIterator);
 		trainIterator.reset();
 
@@ -98,8 +106,33 @@ public class RegressionNetwork {
 	 * @param priori value,should be in the shape [1, numInputs, timeSteps]
 	 */
 	public float[] sampleFromNetwork(INDArray priori, int numTimeSteps){
+		// Log pre-normalized data
+		if(log.isDebugEnabled()) {
+			log.debug("pre-normalized test data:");
+			for (int i = 0; i < priori.size(1); i++) {
+				log.debug("[");
+				for (int j = 0; j < priori.size(2); j++) {
+					log.debug("{}", priori.getFloat(new int[] {0, i, j}));
+				}
+				log.debug("]");
+			}
+		}
+		// Normalize test data
+		this.normalizer.transform(priori);
+		// log post-normalized data
+		if(log.isDebugEnabled()) {
+			log.debug("post-normalized test data:");
+			for (int i = 0; i < priori.size(1); i++) {
+				log.debug("[");
+				for (int j = 0; j < priori.size(2); j++) {
+					log.debug("{}", priori.getFloat(new int[] {0, i, j}));
+				}
+				log.debug("]");
+			}
+		}
+
 		int inputCount = this.getNumOfInputs();
-		float[] samples = new float[numTimeSteps];
+		INDArray samples = Nd4j.create(new int[] {numTimeSteps, 1});
 		
 		if(priori.size(1) != inputCount) {
 			String format = String.format("the priori should have the same number of inputs [%s] as the trained network [%s]", priori.size(1), inputCount);
@@ -120,8 +153,8 @@ public class RegressionNetwork {
 			prevOutput.add(output.getFloat(0, i));
 		}
 		
-		for( int i=0; i<numTimeSteps; ++i ){
-			samples[i] = (prevOutput.peekLast());
+		for (int i=0; i<numTimeSteps; ++i){
+			samples.putScalar(i,  0, prevOutput.peekLast());
 			//Set up next input (single time step) by sampling from previous output
 			INDArray nextInput = Nd4j.zeros(1,inputCount);
 			
@@ -136,7 +169,12 @@ public class RegressionNetwork {
 			// Add the output to the end of the previous output queue
 			prevOutput.addLast(output.ravel().getFloat(0, output.length()-1));
 		}
-		return samples;
+		this.normalizer.revertLabels(samples);
+		float[] result = new float[samples.rows()];
+		for (int i = 0; i < result.length; i++) {
+			result[i] = samples.getFloat(i, 0);
+		}
+		return result;
 	}
 
 	private int getMiniBatchIterations() {
@@ -184,6 +222,22 @@ public class RegressionNetwork {
 
 	public RegressionNetwork setNumOfInputs(int numOfInputs) {
 		this.numOfInputs = numOfInputs;
+		return this;
+	}
+
+	public RegressionNetwork setHiddenLayerWidth(int hiddenLayerWidth) {
+		this.hiddenLayerWidth = hiddenLayerWidth;
+		return this;
+	}
+
+	public RegressionNetwork addIterationListener(IterationListener listener) {
+		this.iterationListeners.add(listener);
+		return this;
+	}
+
+	public RegressionNetwork setIterationListeners(Collection<IterationListener> listeners) {
+		this.iterationListeners.clear();
+		this.iterationListeners.addAll(listeners);
 		return this;
 	}
 }

@@ -21,6 +21,12 @@ public class GraphiteRow implements Comparable<GraphiteRow> {
 		this.epoch = DateTime.parse(epoch.replace(" ", "T"));
 	}
 
+	public GraphiteRow(String target, Float value, String epoch) {
+		this.target = target;
+		this.value = value;
+		this.epoch = DateTime.parse(epoch.replace(" ", "T"));
+	}
+
 	public String getTarget() {
 		return target;
 	}

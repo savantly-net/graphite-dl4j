@@ -5,11 +5,11 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.datavec.api.util.ndarray.RecordConverter;
@@ -30,11 +30,19 @@ public class GraphiteCsv {
 	final private List<GraphiteRow> rows = new ArrayList<>();
 	final private Map<String, List<GraphiteRow>> rowsGroupedByTarget;
 	
+	public static GraphiteCsv from(String string, Function<String[], Boolean> filter) {
+		return new GraphiteCsv(string, filter);
+	}
+	
 	public static GraphiteCsv from(String string) {
 		return new GraphiteCsv(string);
 	}
 	
 	public static GraphiteCsv from(File file) throws IOException {
+		return from(file, null);
+	}
+	
+	public static GraphiteCsv from(File file, Function<String[], Boolean> filter) throws IOException {
 		StringBuilder sb = new StringBuilder();
 		BufferedReader reader = new BufferedReader(new FileReader(file));
 		reader.lines().forEach(s -> {
@@ -46,13 +54,25 @@ public class GraphiteCsv {
 	}
 	
 	public GraphiteCsv(String csv) {
+		this(csv, null);
+	}
+	
+	public GraphiteCsv(String csv, Function<String[], Boolean> filter) {
 		String[] lines = csv.split("\n");
 		for (String string : lines) {
 			String[] values = string.split(",");
-			try {
-				this.rows.add(new GraphiteRow(values[0], values[2], values[1]));
-			} catch (Exception e) {
-				log.warn("failed to import row: ", e.getMessage());
+			if(values.length == 3) {
+				try {
+					boolean allow = true; 
+					if (filter != null) {
+						allow = filter.apply(values);
+					}
+					if (allow) {
+						this.rows.add(new GraphiteRow(values[0], values[2], values[1]));
+					}
+				} catch (Exception e) {
+					log.warn("failed to import row: ", e.getMessage());
+				}
 			}
 		}
 		this.rowsGroupedByTarget = this.rows.stream().collect(Collectors.groupingBy(GraphiteRow::getTarget));
@@ -212,7 +232,8 @@ public class GraphiteCsv {
 	// each unique 'target' is a DataSet in the list
 	public List<DataSet> asDataSetLagWindow(int windowSize) {
 		int skipSize = (windowSize*2);
-		int timeSteps = this.getLongestTimeSteps() - (skipSize);
+		int timeSteps = this.getLongestTimeSteps() - (skipSize) - 1;
+		log.info("windowSize: {}, skipSize: {}, timeSteps: {}", windowSize, skipSize, timeSteps);
 		if (timeSteps < 1) {
 			throw new RuntimeException("there are not enough records to create a lag");
 		}
@@ -220,7 +241,9 @@ public class GraphiteCsv {
 		this.rowsGroupedByTarget.values().stream().forEach(g -> {
 			List<Pair<Long, Float>> values = g.stream().map(r -> {
 				return Pair.of(r.getEpoch().getMillis(), r.getValue());
-			}).collect(Collectors.toList());
+			}).filter(r -> r.getValue() != null).collect(Collectors.toList());
+			
+			log.info("values.size(): {}", values.size());
 			
 
 			INDArray features = Nd4j.create(new int[] {timeSteps, windowSize}, 'c');
@@ -228,10 +251,22 @@ public class GraphiteCsv {
 			INDArray mask = Nd4j.zeros(new int[] {timeSteps, 1}, 'c');
 			
 			LinkedList<Float> queue = new LinkedList<>();
-			for (int i=0; i<values.size(); i++) {
+			for (int i=0; i<=(values.size()-windowSize); i++) {
 				float value = values.get(i).getValue();
 				queue.push(value);
-				if(queue.size() > windowSize) {
+				if((queue.size() > windowSize) && (i<(values.size()-windowSize))) {
+					for(int j=windowSize; j>0; j--) {
+						try {
+						features.put(i-skipSize, j-1, queue.get(j));
+						} catch (Exception e) {
+							log.error("{}", e);
+						}
+					}
+					queue.removeLast();
+					labels.put(i-skipSize, 0, value);
+					mask.put(i-skipSize, 0, 1);
+				} else if(i == (values.size()-windowSize)) {
+					log.info("elsed");
 					for(int j=windowSize; j>0; j--) {
 						try {
 						features.put(i-skipSize, j-1, queue.get(j));
@@ -254,7 +289,7 @@ public class GraphiteCsv {
     public INDArray as3dMatrix(int lagSize, boolean includeLabels) {
     	List<List<List<Writable>>> sequenceList = this.asRecords(lagSize, includeLabels);
     	
-    	int sequenceSize = sequenceList.size();
+    	int sequenceSize = 1;//sequenceList.size();
     	
     	INDArray matrix2d = RecordConverter.toMatrix(sequenceList.get(0));
     	

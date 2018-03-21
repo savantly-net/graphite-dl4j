@@ -79,20 +79,25 @@ public class CommonNetworkConfigurations {
 	}
 	
 	public static MultiLayerConfiguration recurrentNetwork(int numInputs, int hiddenLayerWidth, int numOutputs, double learningRate, int miniBatchIterations) {
-        int tbpttLength = 500;
+        int tbpttLength = 1000;
 		MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
-                .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT).iterations(miniBatchIterations)
+                .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
+                .iterations(miniBatchIterations)
                 .learningRate(learningRate)
-                .seed(12345)
+                .seed(12345)/*
                 .regularization(true)
-                	.l2(0.001)
+                	.l2(0.01)*/
                 .weightInit(WeightInit.XAVIER)
-                .updater(Updater.RMSPROP)
+                .updater(Updater.ADAGRAD)
                 .list()
-                    .layer(0, new GravesLSTM.Builder().nIn(numInputs).nOut(hiddenLayerWidth)
-                                .activation(Activation.SOFTSIGN).build())
-                    .layer(1, new RnnOutputLayer.Builder(LossFunction.MSE).activation(Activation.IDENTITY)        //MCXENT + softmax for classification
-                                .nIn(hiddenLayerWidth).nOut(numOutputs).build())
+                    .layer(0, new GravesLSTM.Builder()
+                    		.nIn(numInputs)
+                    		.nOut(hiddenLayerWidth)
+                            .activation(Activation.TANH).build())
+                    .layer(1, new RnnOutputLayer.Builder(LossFunction.MSE)
+                    		.activation(Activation.IDENTITY)
+                            .nIn(hiddenLayerWidth)
+                            .nOut(numOutputs).build())
                 .backpropType(BackpropType.TruncatedBPTT).tBPTTForwardLength(tbpttLength).tBPTTBackwardLength(tbpttLength)
                 .pretrain(false).backprop(true)
                 .build();

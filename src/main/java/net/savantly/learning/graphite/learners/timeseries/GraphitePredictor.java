@@ -5,11 +5,12 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Function;
 
 import org.datavec.api.writable.Writable;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
+import org.deeplearning4j.optimize.api.IterationListener;
 import org.nd4j.linalg.api.ndarray.INDArray;
-import org.nd4j.linalg.dataset.DataSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,17 +24,18 @@ public class GraphitePredictor {
 	private static final Logger log = LoggerFactory.getLogger(GraphitePredictor.class);
 
 	private QueryableGraphiteClient client;
-	private List<GraphiteQuery<String>> trainingQueries = new ArrayList<>();
+	private GraphiteQuery<String> trainingQuery;
+	private Function<String[], Boolean> dataFilter;
 	private Collection<? extends Collection<? extends Collection<Writable>>> trainingData;
+	private List<IterationListener> iterationListeners = new ArrayList<>();
 	private RegressionNetwork network;
 
-	private int epochs = 20;
+	private int epochs = 50;
 	private double learningRate = 0.07;
 	private int miniBatchSize = 1;
-
 	private int windowSize;
-
 	private int numOfInputs;
+	private int hiddenLayerWidth = 10;
 	
 	public static GraphitePredictor builder() {
 		return new GraphitePredictor();
@@ -49,11 +51,7 @@ public class GraphitePredictor {
 			}
 		}
 		if (this.trainingData == null) {
-			List<DataSet> dsList = new ArrayList<>();
-			for (GraphiteQuery<String> graphiteQuery : trainingQueries) {
-				List<DataSet> ds = new GraphiteCsv(client.query(graphiteQuery)).asDataSetLagWindow(windowSize);
-				dsList.addAll(ds);
-			}
+			this.trainingData = new GraphiteCsv(client.query(this.trainingQuery), this.dataFilter).asRecords(windowSize);
 		}
 		
 		this.network = RegressionNetwork.builder()
@@ -61,6 +59,8 @@ public class GraphitePredictor {
 				.setLearningRate(learningRate)
 				.setTrainingData(trainingData)
 				.setNumOfInputs(numOfInputs)
+				.setHiddenLayerWidth(hiddenLayerWidth)
+				.setIterationListeners(iterationListeners)
 				.build();
 		
 		return this;
@@ -87,12 +87,12 @@ public class GraphitePredictor {
 		return this;
 	}
 
-	public List<GraphiteQuery<String>> getTrainingQueries() {
-		return trainingQueries;
+	public GraphiteQuery<String> getTrainingQuery() {
+		return trainingQuery;
 	}
 
-	public GraphitePredictor setTrainingQueries(List<GraphiteQuery<String>> trainingQueries) {
-		this.trainingQueries = trainingQueries;
+	public GraphitePredictor setTrainingQuery(GraphiteQuery<String> trainingQuery) {
+		this.trainingQuery = trainingQuery;
 		return this;
 	}
 
@@ -139,6 +139,38 @@ public class GraphitePredictor {
 
 	public GraphitePredictor setNumOfInputs(int numOfInputs) {
 		this.numOfInputs = numOfInputs;
+		return this;
+	}
+
+	public int getWindowSize() {
+		return windowSize;
+	}
+
+	public GraphitePredictor setWindowSize(int windowSize) {
+		this.windowSize = windowSize;
+		return this;
+	}
+
+	public Function<String[], Boolean> getDataFilter() {
+		return dataFilter;
+	}
+
+	public GraphitePredictor setDataFilter(Function<String[], Boolean> dataFilter) {
+		this.dataFilter = dataFilter;
+		return this;
+	}
+
+	public int getHiddenLayerWidth() {
+		return hiddenLayerWidth;
+	}
+
+	public GraphitePredictor setHiddenLayerWidth(int hiddenLayerWidth) {
+		this.hiddenLayerWidth = hiddenLayerWidth;
+		return this;
+	}
+	
+	public GraphitePredictor addIterationListener(IterationListener listener) {
+		this.iterationListeners.add(listener);
 		return this;
 	}
 
