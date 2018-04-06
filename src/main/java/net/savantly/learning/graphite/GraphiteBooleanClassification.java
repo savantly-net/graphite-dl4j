@@ -7,9 +7,6 @@ import java.util.List;
 
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.nd4j.linalg.api.ndarray.INDArray;
-import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
-import org.nd4j.linalg.indexing.NDArrayIndex;
-import org.nd4j.linalg.primitives.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,21 +16,16 @@ import net.savantly.graphite.GraphiteClient;
 import net.savantly.graphite.GraphiteClientFactory;
 import net.savantly.graphite.QueryableGraphiteClient;
 import net.savantly.graphite.query.GraphiteQuery;
-import net.savantly.learning.graphite.convert.GraphiteToDataSet;
-import net.savantly.learning.graphite.domain.GraphiteMultiSeries;
 import net.savantly.learning.graphite.learners.timeseries.GraphiteSeriesClassifier;
 
 public class GraphiteBooleanClassification {
 	
 	private static final Logger log = LoggerFactory.getLogger(GraphiteBooleanClassification.class);
 
-	private List<GraphiteMultiSeries> positiveTrainingExamples = new ArrayList<>();
-	private List<GraphiteMultiSeries> negativeTrainingExamples = new ArrayList<>();
-	private List<GraphiteQuery<JsonNode>> positiveQueries = new ArrayList<>();
-	private List<GraphiteQuery<JsonNode>> negativeQueries = new ArrayList<>();
+	private List<GraphiteQuery<String>> positiveQueries = new ArrayList<>();
+	private List<GraphiteQuery<String>> negativeQueries = new ArrayList<>();
 	private GraphiteSeriesClassifier classifier = GraphiteSeriesClassifier
-			.builder()
-			.setDoRegression(false);
+			.builder();
 	private File workingDirectory;
 	private QueryableGraphiteClient client;
 	private int numberOfIterations = 40;
@@ -50,17 +42,11 @@ public class GraphiteBooleanClassification {
 		if (this.client == null) {
 			this.client = GraphiteClientFactory.queryableGraphiteClient("127.0.0.1");
 		}
-		for (GraphiteQuery<JsonNode> graphiteQuery : negativeQueries) {
-			this.negativeTrainingExamples.add(GraphiteMultiSeries.from(client.query(graphiteQuery)));
-		}
-		for (GraphiteQuery<JsonNode> graphiteQuery : positiveQueries) {
-			this.positiveTrainingExamples.add(GraphiteMultiSeries.from(client.query(graphiteQuery)));
-		}
+
 		this.classifier.setWorkingDirectory(workingDirectory)
 			.setNumberOfIterations(numberOfIterations)
-			.setNegativeExamples(negativeTrainingExamples)
-			.setPositiveExamples(positiveTrainingExamples)
-			.setDoRegression(false)
+			.setNegativeExamples(negativeQueries)
+			.setPositiveExamples(positiveQueries)
 			.build();
 		return this;
 	}
@@ -71,8 +57,8 @@ public class GraphiteBooleanClassification {
 	}
 
 	public INDArray evaluate(GraphiteQuery<JsonNode> query) {
-		
-		GraphiteMultiSeries multiSeries = GraphiteMultiSeries.from(this.client.query(query));
+		// TODO: IMplement this
+		/*GraphiteMultiSeries multiSeries = GraphiteMultiSeries.from(this.client.query(query));
 		
 		@SuppressWarnings("unchecked")
 		List<Pair<INDArray, INDArray>> dataPairs = GraphiteToDataSet
@@ -85,23 +71,24 @@ public class GraphiteBooleanClassification {
 	    int timeSeriesLength = timeSeriesOutput.size(2);		//Size of time dimension
 	    INDArray lastTimeStepProbabilities = timeSeriesOutput.get(NDArrayIndex.point(0), NDArrayIndex.all(), NDArrayIndex.point(timeSeriesLength-1));
 	    log.debug(lastTimeStepProbabilities.toString());
-		return lastTimeStepProbabilities;
+		return lastTimeStepProbabilities;*/
+		return null;
 	}
 
-	public List<GraphiteQuery<JsonNode>> getPositiveQueries() {
+	public List<GraphiteQuery<String>> getPositiveQueries() {
 		return positiveQueries;
 	}
 
-	public GraphiteBooleanClassification addPositiveQuery(GraphiteQuery<JsonNode> positiveQuery) {
+	public GraphiteBooleanClassification addPositiveQuery(GraphiteQuery<String> positiveQuery) {
 		this.positiveQueries.add(positiveQuery);
 		return this;
 	}
 
-	public List<GraphiteQuery<JsonNode>> getNegativeQueries() {
+	public List<GraphiteQuery<String>> getNegativeQueries() {
 		return negativeQueries;
 	}
 
-	public GraphiteBooleanClassification addNegativeQuery(GraphiteQuery<JsonNode> negativeQuery) {
+	public GraphiteBooleanClassification addNegativeQuery(GraphiteQuery<String> negativeQuery) {
 		this.negativeQueries.add(negativeQuery);
 		return this;
 	}

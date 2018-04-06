@@ -78,7 +78,7 @@ public class CommonNetworkConfigurations {
 		return conf;
 	}
 	
-	public static MultiLayerConfiguration recurrentNetwork(int numInputs, int hiddenLayerWidth, int numOutputs, double learningRate, int miniBatchIterations) {
+	public static MultiLayerConfiguration recurrentNetwork(int numInputs, int hiddenLayerWidth, int numOutputs, double learningRate, int miniBatchIterations, double rnnLearningRate) {
         int tbpttLength = 1000;
 		MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
                 .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
@@ -88,13 +88,14 @@ public class CommonNetworkConfigurations {
                 .regularization(true)
                 	.l2(0.01)*/
                 .weightInit(WeightInit.XAVIER)
-                .updater(Updater.ADAGRAD)
+        		.updater(Updater.ADAGRAD)
                 .list()
                     .layer(0, new GravesLSTM.Builder()
                     		.nIn(numInputs)
                     		.nOut(hiddenLayerWidth)
                             .activation(Activation.TANH).build())
                     .layer(1, new RnnOutputLayer.Builder(LossFunction.MSE)
+                    		.learningRate(rnnLearningRate)
                     		.activation(Activation.IDENTITY)
                             .nIn(hiddenLayerWidth)
                             .nOut(numOutputs).build())

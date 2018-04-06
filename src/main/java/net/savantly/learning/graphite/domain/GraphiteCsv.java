@@ -227,6 +227,30 @@ public class GraphiteCsv {
 		return dsList;
 	}
 	
+	public List<DataSet> asLabeledDataSet(int label) {
+		List<DataSet> dsList = new ArrayList<>();
+		this.rowsGroupedByTarget.values().stream().forEach(g -> {
+			List<Pair<Long, Float>> values = g.stream().map(r -> {
+				return Pair.of(r.getEpoch().getMillis(), r.getValue());
+			}).collect(Collectors.toList());
+			
+
+			INDArray features = Nd4j.create(new int[] {this.getLongestTimeSteps(), 1}, 'c');
+			INDArray labels = Nd4j.create(new int[] {this.getLongestTimeSteps(), 1}, 'c');
+			INDArray mask = Nd4j.zeros(new int[] {this.getLongestTimeSteps(), 1}, 'c');
+			
+			for (int i=0; i<values.size(); i++) {
+				features.put(i, 0, values.get(i).getFirst());
+				labels.put(i, 0, values.get(i).getSecond());
+				mask.put(i, 0, 1);
+			}
+			DataSet ds = new DataSet(features, labels, mask, mask);
+			dsList.add(ds);
+		});
+		
+		return dsList;
+	}
+	
 	// the previous values become the features for the current value
 	// the current value becomes the label
 	// each unique 'target' is a DataSet in the list
@@ -254,29 +278,17 @@ public class GraphiteCsv {
 			for (int i=0; i<=(values.size()-windowSize); i++) {
 				float value = values.get(i).getValue();
 				queue.push(value);
-				if((queue.size() > windowSize) && (i<(values.size()-windowSize))) {
+				if((queue.size() > windowSize) && (i<timeSteps+windowSize)) {
 					for(int j=windowSize; j>0; j--) {
 						try {
-						features.put(i-skipSize, j-1, queue.get(j));
+						features.put(i-windowSize, j-1, queue.get(j));
 						} catch (Exception e) {
 							log.error("{}", e);
 						}
 					}
 					queue.removeLast();
-					labels.put(i-skipSize, 0, value);
-					mask.put(i-skipSize, 0, 1);
-				} else if(i == (values.size()-windowSize)) {
-					log.info("elsed");
-					for(int j=windowSize; j>0; j--) {
-						try {
-						features.put(i-skipSize, j-1, queue.get(j));
-						} catch (Exception e) {
-							log.error("{}", e);
-						}
-					}
-					queue.removeLast();
-					labels.put(i-skipSize, 0, value);
-					mask.put(i-skipSize, 0, 1);
+					labels.put(i-windowSize, 0, value);
+					mask.put(i-windowSize, 0, 1);
 				}
 			}
 			DataSet ds = new DataSet(features, labels);
@@ -306,6 +318,10 @@ public class GraphiteCsv {
 		}
         return features;
     }
+
+	public List<DataSet> asLabeledDataSet(Boolean label) {
+		return this.asLabeledDataSet(label?1:0);
+	}
 
 
 }

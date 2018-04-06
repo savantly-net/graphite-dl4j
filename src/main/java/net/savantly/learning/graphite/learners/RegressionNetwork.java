@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 public class RegressionNetwork {
 	private static final Logger log = LoggerFactory.getLogger(RegressionNetwork.class);
 	private double learningRate = 0.07;
+	private double rnnLearningRate = 0.07;
 	private int epochs = 20;
 	private Collection<? extends Collection<? extends Collection<Writable>>> initialData;
 	private MultiLayerNetwork network;
@@ -44,15 +45,24 @@ public class RegressionNetwork {
 	public static RegressionNetwork builder() {
 		return new RegressionNetwork();
 	}
-
+	
 	public RegressionNetwork build() {
+		return build(new MultiLayerNetwork(getNetworkConfiguration()));
+	}
+
+	public RegressionNetwork build(MultiLayerNetwork network) {
 		if (this.initialData == null) {
 			throw new RuntimeException("no training data found");
 		}
 		this.trainingData = this.initialData;
-		this.network = new MultiLayerNetwork(getNetworkConfiguration());
+		this.network = network;
 		this.network.init();
 		this.network.setListeners(this.getListeners());
+		
+		this.normalizer = new NormalizerStandardize();
+		DataSetIterator trainIterator = getDataSetIterator(this.trainingData, this.miniBatchSize);
+		normalizer.fitLabel(true);
+		normalizer.fit(trainIterator);
 
 		return this;
 	}
@@ -63,11 +73,6 @@ public class RegressionNetwork {
 
 	public MultiLayerNetwork train() {
 		DataSetIterator trainIterator = getDataSetIterator(this.trainingData, this.miniBatchSize);
-		normalizer = new NormalizerStandardize();
-		normalizer.fitLabel(true);
-		normalizer.fit(trainIterator);
-		trainIterator.reset();
-
 		trainIterator.setPreProcessor(normalizer);
 
 		for (int i = 0; i < this.epochs; i++) {
@@ -95,11 +100,12 @@ public class RegressionNetwork {
 
 	public MultiLayerConfiguration getNetworkConfiguration() {
 		MultiLayerConfiguration config = CommonNetworkConfigurations.recurrentNetwork(this.getNumOfInputs(), this.hiddenLayerWidth,
-				getOutputCount(), getLearningRate(), getMiniBatchIterations());
+				getOutputCount(), getLearningRate(), getMiniBatchIterations(), this.getRnnLearningRate());
 		log.info(config.toYaml());
 		return config;
 	}
 	
+
 	/** Generate a sample from the network,
 	 * can be used to 'prime' the RNN with a sequence you want to extend/continue.<br>
 	 * Note that the initalization is used for all samples
@@ -176,6 +182,12 @@ public class RegressionNetwork {
 		}
 		return result;
 	}
+	
+	public void update(INDArray input) {
+		boolean training = true;
+		boolean storeLastForTBPTT = true;
+		this.network.rnnActivateUsingStoredState(input, training, storeLastForTBPTT);
+	}
 
 	private int getMiniBatchIterations() {
 		return this.miniBatchIterations;
@@ -238,6 +250,15 @@ public class RegressionNetwork {
 	public RegressionNetwork setIterationListeners(Collection<IterationListener> listeners) {
 		this.iterationListeners.clear();
 		this.iterationListeners.addAll(listeners);
+		return this;
+	}
+
+	public double getRnnLearningRate() {
+		return this.rnnLearningRate;
+	}
+	
+	public RegressionNetwork setRnnLearningRate(double rate) {
+		this.rnnLearningRate = rate;
 		return this;
 	}
 }

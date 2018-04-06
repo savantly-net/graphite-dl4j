@@ -32,6 +32,7 @@ public class GraphitePredictor {
 
 	private int epochs = 50;
 	private double learningRate = 0.07;
+	private double rnnLearningRate = 0.07;
 	private int miniBatchSize = 1;
 	private int windowSize;
 	private int numOfInputs;
@@ -42,6 +43,10 @@ public class GraphitePredictor {
 	}
 	
 	public GraphitePredictor build() {
+		return build(null);
+	}
+	
+	public GraphitePredictor build(MultiLayerNetwork pretrainedNetwork) {
 		if (this.client == null) {
 			try {
 				this.client = GraphiteClientFactory.queryableGraphiteClient("127.0.0.1");
@@ -57,11 +62,16 @@ public class GraphitePredictor {
 		this.network = RegressionNetwork.builder()
 				.setEpochs(epochs)
 				.setLearningRate(learningRate)
+				.setRnnLearningRate(rnnLearningRate)
 				.setTrainingData(trainingData)
 				.setNumOfInputs(numOfInputs)
 				.setHiddenLayerWidth(hiddenLayerWidth)
-				.setIterationListeners(iterationListeners)
-				.build();
+				.setIterationListeners(iterationListeners);
+		if(pretrainedNetwork == null) {
+			this.network = this.network.build();
+		} else {
+			this.network = this.network.build(pretrainedNetwork);
+		}
 		
 		return this;
 	}
@@ -72,6 +82,10 @@ public class GraphitePredictor {
 	
 	public INDArray predict(int timeSteps) {
 		return this.network.predict(timeSteps);
+	}
+	
+	public void update(INDArray input) {
+		this.network.update(input);
 	}
 
 	public MultiLayerNetwork train() {
@@ -171,6 +185,15 @@ public class GraphitePredictor {
 	
 	public GraphitePredictor addIterationListener(IterationListener listener) {
 		this.iterationListeners.add(listener);
+		return this;
+	}
+
+	public double getRnnLearningRate() {
+		return rnnLearningRate;
+	}
+
+	public GraphitePredictor setRnnLearningRate(double rnnLearningRate) {
+		this.rnnLearningRate = rnnLearningRate;
 		return this;
 	}
 
