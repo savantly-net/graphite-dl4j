@@ -28,14 +28,14 @@ import net.savantly.learning.graphite.util.EpochNormalizer;
 public class RegressionNetwork {
 	private static final Logger log = LoggerFactory.getLogger(RegressionNetwork.class);
 	private static final int TIMESTEP_SEC = 15;
-	private double learningRate = 0.07;
-	private double rnnLearningRate = 0.07;
+	private double learningRate = 0.001;
+	private double rnnLearningRate = 0.001;
 	private int epochs = 20;
 	private Collection<? extends Collection<? extends Collection<Writable>>> initialData;
 	private MultiLayerNetwork network;
-	private int miniBatchSize = 50;
+	private int miniBatchSize = 1;
 	private int miniBatchIterations = 1;
-	private int hiddenLayerWidth = 10;
+	private int hiddenLayerWidth = 30;
 	private Collection<? extends Collection<? extends Collection<Writable>>> trainingData;
 	private DataNormalization normalizer;
 	private int numOfInputs = 1;
@@ -162,7 +162,7 @@ public class RegressionNetwork {
 
 		this.network.rnnClearPreviousState();
 		INDArray output = this.network.rnnTimeStep(priori);
-		
+		this.normalizer.revertFeatures(output);
 		output = output.ravel();
 		// Store the output for use in the inputs
 		LinkedList<Float> prevOutput = new LinkedList<>();
@@ -184,21 +184,23 @@ public class RegressionNetwork {
 				newInputs[inputCount-1] = epoch;
 				newInputs[inputCount-2] = prevOutput.peekLast();
 				for( int j=0; j<newInputs.length-2; j++ ) {
-					newInputs[j] = prevOutput.get(prevOutput.size()-inputCount-j);
+					newInputs[j] = prevOutput.get(prevOutput.size()-1-j);
 				}
 			} else { // standard sliding [lag] window
 				newInputs[inputCount-1] = prevOutput.peekLast();
 				for( int j=0; j<newInputs.length-1; j++ ) {
-					newInputs[j] = prevOutput.get(prevOutput.size()-inputCount-j);
+					newInputs[j] = prevOutput.get(prevOutput.size()-1-j);
 				}
 			}
 
 			nextInput.assign(Nd4j.create(newInputs)); //Prepare next time step input
+			this.normalizer.transform(nextInput); // normalize the new features
 			output = this.network.rnnTimeStep(nextInput); //Do one time step of forward pass
+			this.normalizer.revertLabels(output); // revert the output
 			// Add the output to the end of the previous output queue
 			prevOutput.addLast(output.ravel().getFloat(0, output.length()-1));
 		}
-		this.normalizer.revertLabels(samples);
+		// this.normalizer.revertLabels(samples);
 		float[] result = new float[samples.rows()];
 		for (int i = 0; i < result.length; i++) {
 			result[i] = samples.getFloat(i, 0);

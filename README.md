@@ -2,8 +2,7 @@
 
 Perform machine algorithms on graphite query results.  
 
-You can use the QueryableGraphiteClient to get positive and negative condition examples to load the classifier.  
-
+Also see -  
 [graphite client](https://github.com/savantly-net/graphite-client)  
 
 
