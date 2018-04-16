@@ -34,8 +34,8 @@ public class GraphitePredictor {
 	private double learningRate = 0.07;
 	private double rnnLearningRate = 0.07;
 	private int miniBatchSize = 1;
-	private int windowSize;
-	private int numOfInputs;
+	private int windowSize = 1;
+	private int numOfInputs = windowSize+1;
 	private int hiddenLayerWidth = 10;
 	
 	public static GraphitePredictor builder() {
@@ -56,7 +56,7 @@ public class GraphitePredictor {
 			}
 		}
 		if (this.trainingData == null) {
-			this.trainingData = new GraphiteCsv(client.query(this.trainingQuery), this.dataFilter).asRecords(windowSize);
+			this.trainingData = new GraphiteCsv(client.query(this.trainingQuery)).asRecords(windowSize);
 		}
 		
 		this.network = RegressionNetwork.builder()
@@ -77,7 +77,7 @@ public class GraphitePredictor {
 	}
 	
 	public float[] doTimeStep(int timeSteps, INDArray testingData) {
-		return this.network.rnnTimeStep(timeSteps, testingData);
+		return this.network.rnnTimeStep(timeSteps, testingData, true);
 	}
 	
 	public INDArray predict(int timeSteps) {

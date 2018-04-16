@@ -14,6 +14,7 @@ import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.optimize.api.IterationListener;
 import org.deeplearning4j.optimize.listeners.PerformanceListener;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
+import org.joda.time.DateTime;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 import org.nd4j.linalg.dataset.api.preprocessor.DataNormalization;
@@ -22,8 +23,11 @@ import org.nd4j.linalg.factory.Nd4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import net.savantly.learning.graphite.util.EpochNormalizer;
+
 public class RegressionNetwork {
 	private static final Logger log = LoggerFactory.getLogger(RegressionNetwork.class);
+	private static final int TIMESTEP_SEC = 15;
 	private double learningRate = 0.07;
 	private double rnnLearningRate = 0.07;
 	private int epochs = 20;
@@ -82,8 +86,15 @@ public class RegressionNetwork {
 		return this.network;
 	}
 
-	public float[] rnnTimeStep(int timeSteps, INDArray testingData) {
-		return this.sampleFromNetwork(testingData, timeSteps);
+	/**
+	 * 
+	 * @param timeSteps
+	 * @param testingData
+	 * @param containsEpoch The last feature is an epoch
+	 * @return
+	 */
+	public float[] rnnTimeStep(int timeSteps, INDArray testingData, boolean containsEpoch) {
+		return this.sampleFromNetwork(testingData, timeSteps, containsEpoch);
 	}
 
 	public INDArray predict(int timeSteps) {
@@ -111,7 +122,7 @@ public class RegressionNetwork {
 	 * Note that the initalization is used for all samples
 	 * @param priori value,should be in the shape [1, numInputs, timeSteps]
 	 */
-	public float[] sampleFromNetwork(INDArray priori, int numTimeSteps){
+	public float[] sampleFromNetwork(INDArray priori, int numTimeSteps, boolean containsEpoch){
 		// Log pre-normalized data
 		if(log.isDebugEnabled()) {
 			log.debug("pre-normalized test data:");
@@ -163,11 +174,23 @@ public class RegressionNetwork {
 			samples.putScalar(i,  0, prevOutput.peekLast());
 			//Set up next input (single time step) by sampling from previous output
 			INDArray nextInput = Nd4j.zeros(1,inputCount);
-			
+
 			float[] newInputs = new float[inputCount];
-			newInputs[inputCount-1] = prevOutput.peekLast();
-			for( int j=0; j<newInputs.length-1; j++ ) {
-				newInputs[j] = prevOutput.get(prevOutput.size()-inputCount-j);
+			
+			// If there is an epoch feature, we need to keep it in the right place
+			if (containsEpoch) {
+				// calculate the current timestep seconds offset and normalize the value
+				float epoch = EpochNormalizer.standard(DateTime.now().plusSeconds((i+1) * TIMESTEP_SEC).getMillis());
+				newInputs[inputCount-1] = epoch;
+				newInputs[inputCount-2] = prevOutput.peekLast();
+				for( int j=0; j<newInputs.length-2; j++ ) {
+					newInputs[j] = prevOutput.get(prevOutput.size()-inputCount-j);
+				}
+			} else { // standard sliding [lag] window
+				newInputs[inputCount-1] = prevOutput.peekLast();
+				for( int j=0; j<newInputs.length-1; j++ ) {
+					newInputs[j] = prevOutput.get(prevOutput.size()-inputCount-j);
+				}
 			}
 
 			nextInput.assign(Nd4j.create(newInputs)); //Prepare next time step input

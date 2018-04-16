@@ -88,7 +88,7 @@ public class CommonNetworkConfigurations {
                 .regularization(true)
                 	.l2(0.01)*/
                 .weightInit(WeightInit.XAVIER)
-        		.updater(Updater.ADAGRAD)
+        		.updater(Updater.RMSPROP)
                 .list()
                     .layer(0, new GravesLSTM.Builder()
                     		.nIn(numInputs)

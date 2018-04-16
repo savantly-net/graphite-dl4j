@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.datavec.api.util.ndarray.RecordConverter;
@@ -23,9 +25,12 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.primitives.Ints;
 
+import net.savantly.learning.graphite.util.EpochNormalizer;
+
 public class GraphiteCsv {
 	
 	private static final Logger log = LoggerFactory.getLogger(GraphiteCsv.class);
+	private final Pattern targetPattern = Pattern.compile("\".*(,).*\""); 
 	
 	final private List<GraphiteRow> rows = new ArrayList<>();
 	final private Map<String, List<GraphiteRow>> rowsGroupedByTarget;
@@ -50,7 +55,7 @@ public class GraphiteCsv {
 			sb.append("\n");
 		});
 		reader.close();
-		return from(sb.toString());
+		return from(sb.toString(), filter);
 	}
 	
 	public GraphiteCsv(String csv) {
@@ -60,6 +65,10 @@ public class GraphiteCsv {
 	public GraphiteCsv(String csv, Function<String[], Boolean> filter) {
 		String[] lines = csv.split("\n");
 		for (String string : lines) {
+			Matcher m = targetPattern.matcher(string);
+			if(m.find()) {
+				string = string.replaceFirst(targetPattern.pattern(), m.group().replaceAll(",", "_"));
+			}
 			String[] values = string.split(",");
 			if(values.length == 3) {
 				try {
@@ -88,7 +97,7 @@ public class GraphiteCsv {
 	public int getLongestTimeSteps() {
 		return this.rowsGroupedByTarget.values().stream().map(g->{
 			return g.size();
-		}).max(Ints::compare).get();
+		}).max(Ints::compare).orElse(0);
 	}
 	
 	// Values only
@@ -190,7 +199,7 @@ public class GraphiteCsv {
 	// default is 1
 	public List<List<List<Writable>>> asRecords(int lagSize, boolean includeLabels) {
 		List<List<List<Writable>>> results = new ArrayList<>();
-		for (DataSet ds : this.asDataSetLagWindow(lagSize)) {
+		for (DataSet ds : this.asDataSetLagWindow(lagSize, true, true)) {
 			if (!includeLabels) {
 				results.add(RecordConverter.toRecords(ds.getFeatureMatrix()));
 			} else {
@@ -254,7 +263,11 @@ public class GraphiteCsv {
 	// the previous values become the features for the current value
 	// the current value becomes the label
 	// each unique 'target' is a DataSet in the list
-	public List<DataSet> asDataSetLagWindow(int windowSize) {
+	public List<DataSet> asDataSetLagWindow(int windowSize, boolean epochAsFeature, boolean normalizeEpoch) {
+		AtomicInteger featureCount = new AtomicInteger(windowSize);
+		if(epochAsFeature) {
+			featureCount.incrementAndGet();
+		}
 		int skipSize = (windowSize*2);
 		int timeSteps = this.getLongestTimeSteps() - (skipSize) - 1;
 		log.info("windowSize: {}, skipSize: {}, timeSteps: {}", windowSize, skipSize, timeSteps);
@@ -270,7 +283,7 @@ public class GraphiteCsv {
 			log.info("values.size(): {}", values.size());
 			
 
-			INDArray features = Nd4j.create(new int[] {timeSteps, windowSize}, 'c');
+			INDArray features = Nd4j.create(new int[] {timeSteps, featureCount.get()}, 'c');
 			INDArray labels = Nd4j.create(new int[] {timeSteps, 1}, 'c');
 			INDArray mask = Nd4j.zeros(new int[] {timeSteps, 1}, 'c');
 			
@@ -286,6 +299,14 @@ public class GraphiteCsv {
 							log.error("{}", e);
 						}
 					}
+					// If we want the epoch as a feature, then put it in the last feature column
+					if(epochAsFeature) {
+						float epoch = values.get(i).getFirst();
+						if(normalizeEpoch) {
+							epoch = EpochNormalizer.standard(epoch);
+						}
+						features.put(i-windowSize, featureCount.get()-1, epoch);
+					}
 					queue.removeLast();
 					labels.put(i-windowSize, 0, value);
 					mask.put(i-windowSize, 0, 1);
@@ -297,8 +318,8 @@ public class GraphiteCsv {
 		
 		return dsList;
 	}
-	
-    public INDArray as3dMatrix(int lagSize, boolean includeLabels) {
+
+	public INDArray as3dMatrix(int lagSize, boolean includeLabels) {
     	List<List<List<Writable>>> sequenceList = this.asRecords(lagSize, includeLabels);
     	
     	int sequenceSize = 1;//sequenceList.size();

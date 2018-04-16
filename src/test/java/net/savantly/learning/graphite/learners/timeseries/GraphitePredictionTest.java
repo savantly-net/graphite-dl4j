@@ -37,7 +37,7 @@ private static final Logger log = LoggerFactory.getLogger(GraphitePredictionTest
 				.setTrainingData(trainingData)
 				.setEpochs(10)
 				.setLearningRate(0.05)
-				.setNumOfInputs(lagSize)
+				.setNumOfInputs(lagSize+1) // we're using the epoch as a feature
 				.build();
 		MultiLayerNetwork network = predictor.train();
 		log.info(network.summary());
@@ -65,7 +65,7 @@ private static final Logger log = LoggerFactory.getLogger(GraphitePredictionTest
 				.setTrainingData(trainingData)
 				.setEpochs(10)
 				.setLearningRate(0.05)
-				.setNumOfInputs(lagSize)
+				.setNumOfInputs(lagSize+1) // epoch is also a feature
 				.build();
 		MultiLayerNetwork network = predictor.train();
 		log.info(network.summary());
