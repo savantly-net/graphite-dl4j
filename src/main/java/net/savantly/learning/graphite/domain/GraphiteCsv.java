@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -58,7 +59,7 @@ public class GraphiteCsv {
 	}
 	
 	public GraphiteCsv(String csv, Function<String[], Boolean> filter) {
-		String[] lines = csv.split("\n");
+		String[] lines = splitLine(string);
 		for (String string : lines) {
 			String[] values = string.split(",");
 			if(values.length == 3) {
@@ -77,6 +78,34 @@ public class GraphiteCsv {
 		}
 		this.rowsGroupedByTarget = this.rows.stream().collect(Collectors.groupingBy(GraphiteRow::getTarget));
 	}
+
+    private static String[] splitLine(final String string) {
+        final List<StringBuilder> rv = new ArrayList<>();
+        rv.add(new StringBuilder());
+        final AtomicBoolean inquotes = new AtomicBoolean(false);
+        final AtomicBoolean escaping = new AtomicBoolean(false);
+
+        string.codePoints().forEach(c -> {
+            final StringBuilder sb = rv.get(rv.size() - 1);
+            if (c == '\\') {
+                if (!escaping.get()) {
+                    escaping.set(true);
+                    return;
+                }
+            } else if (!escaping.get() && c == '"') {
+                inquotes.set(!inquotes.get());
+            } else if (!inquotes.get() && c == ',') {
+                rv.add(new StringBuilder());
+                return;
+            }
+            escaping.set(false);
+            sb.appendCodePoint(c);
+        });
+
+        return rv.stream().collect(ArrayList<String>::new, (ArrayList<String> l, StringBuilder e) -> l.add(e.toString()), (a1, a2) -> {
+            a1.addAll(a2);
+        }).toArray(new String[0]);
+    }
 
 	public List<GraphiteRow> getRows() {
 		return rows;
