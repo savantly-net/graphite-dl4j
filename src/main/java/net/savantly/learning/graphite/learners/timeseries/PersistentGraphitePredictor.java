@@ -41,6 +41,7 @@ public class PersistentGraphitePredictor {
 	private double learningRate = 0.001;
 	private int epochs = 50;
 	private int hiddenLayerWidth = 30;
+	private int tbpttLength = 1000;
 
 	private PersistentGraphitePredictor(QueryableGraphiteClient client) {
 		this.client = client;
@@ -66,6 +67,7 @@ public class PersistentGraphitePredictor {
 				.setRnnLearningRate(this.getRnnLearningRate())
 				.setNumOfInputs(windowSize+1)
 				.setWindowSize(windowSize)
+				.setTbpttLength(tbpttLength)
 				.setHiddenLayerWidth(this.getHiddenLayerWidth());
 		for (IterationListener iterationListener : iterationListeners) {
 			this.graphitePredictor.addIterationListener(iterationListener);
@@ -259,6 +261,15 @@ public class PersistentGraphitePredictor {
 
 	public PersistentGraphitePredictor setHiddenLayerWidth(int hiddenLayerWidth) {
 		this.hiddenLayerWidth = hiddenLayerWidth;
+		return this;
+	}
+
+	public int getTbpttLength() {
+		return tbpttLength;
+	}
+
+	public PersistentGraphitePredictor setTbpttLength(int tbpttLength) {
+		this.tbpttLength = tbpttLength;
 		return this;
 	}
 

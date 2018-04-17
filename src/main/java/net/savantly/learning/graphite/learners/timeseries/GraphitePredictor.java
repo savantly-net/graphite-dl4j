@@ -31,12 +31,13 @@ public class GraphitePredictor {
 	private RegressionNetwork network;
 
 	private int epochs = 50;
-	private double learningRate = 0.07;
-	private double rnnLearningRate = 0.07;
+	private double learningRate = 0.01;
+	private double rnnLearningRate = 0.01;
 	private int miniBatchSize = 1;
 	private int windowSize = 1;
 	private int numOfInputs = windowSize+1;
-	private int hiddenLayerWidth = 10;
+	private int hiddenLayerWidth = 30;
+	private int tbpttLength = 1000;
 	
 	public static GraphitePredictor builder() {
 		return new GraphitePredictor();
@@ -66,6 +67,7 @@ public class GraphitePredictor {
 				.setTrainingData(trainingData)
 				.setNumOfInputs(numOfInputs)
 				.setHiddenLayerWidth(hiddenLayerWidth)
+				.setTbpttLength(tbpttLength)
 				.setIterationListeners(iterationListeners);
 		if(pretrainedNetwork == null) {
 			this.network = this.network.build();
@@ -194,6 +196,15 @@ public class GraphitePredictor {
 
 	public GraphitePredictor setRnnLearningRate(double rnnLearningRate) {
 		this.rnnLearningRate = rnnLearningRate;
+		return this;
+	}
+
+	public int getTbpttLength() {
+		return tbpttLength;
+	}
+
+	public GraphitePredictor setTbpttLength(int tbpttLength) {
+		this.tbpttLength = tbpttLength;
 		return this;
 	}
 

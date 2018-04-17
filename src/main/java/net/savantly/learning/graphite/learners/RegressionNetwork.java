@@ -28,8 +28,8 @@ import net.savantly.learning.graphite.util.EpochNormalizer;
 public class RegressionNetwork {
 	private static final Logger log = LoggerFactory.getLogger(RegressionNetwork.class);
 	private static final int TIMESTEP_SEC = 15;
-	private double learningRate = 0.001;
-	private double rnnLearningRate = 0.001;
+	private double learningRate = 0.01;
+	private double rnnLearningRate = 0.01;
 	private int epochs = 20;
 	private Collection<? extends Collection<? extends Collection<Writable>>> initialData;
 	private MultiLayerNetwork network;
@@ -39,6 +39,7 @@ public class RegressionNetwork {
 	private Collection<? extends Collection<? extends Collection<Writable>>> trainingData;
 	private DataNormalization normalizer;
 	private int numOfInputs = 1;
+	private int tbpttLength = 1000;
 	private final List<IterationListener> iterationListeners = new ArrayList<>();
 
 	protected RegressionNetwork() {
@@ -111,11 +112,11 @@ public class RegressionNetwork {
 
 	public MultiLayerConfiguration getNetworkConfiguration() {
 		MultiLayerConfiguration config = CommonNetworkConfigurations.recurrentNetwork(this.getNumOfInputs(), this.hiddenLayerWidth,
-				getOutputCount(), getLearningRate(), getMiniBatchIterations(), this.getRnnLearningRate());
+				getOutputCount(), getLearningRate(), getMiniBatchIterations(), this.getRnnLearningRate(), this.getTbpttLength());
 		log.info(config.toYaml());
 		return config;
 	}
-	
+
 
 	/** Generate a sample from the network,
 	 * can be used to 'prime' the RNN with a sequence you want to extend/continue.<br>
@@ -284,6 +285,15 @@ public class RegressionNetwork {
 	
 	public RegressionNetwork setRnnLearningRate(double rate) {
 		this.rnnLearningRate = rate;
+		return this;
+	}
+	
+	private int getTbpttLength() {
+		return this.tbpttLength;
+	}
+
+	public RegressionNetwork setTbpttLength(int tbpttLength) {
+		this.tbpttLength = tbpttLength;
 		return this;
 	}
 }
