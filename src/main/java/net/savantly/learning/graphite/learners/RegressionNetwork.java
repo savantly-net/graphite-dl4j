@@ -68,6 +68,7 @@ public class RegressionNetwork {
 		DataSetIterator trainIterator = getDataSetIterator(this.trainingData, this.miniBatchSize);
 		normalizer.fitLabel(true);
 		normalizer.fit(trainIterator);
+		trainIterator.reset();
 
 		return this;
 	}
@@ -124,30 +125,6 @@ public class RegressionNetwork {
 	 * @param priori value,should be in the shape [1, numInputs, timeSteps]
 	 */
 	public float[] sampleFromNetwork(INDArray priori, int numTimeSteps, boolean containsEpoch){
-		// Log pre-normalized data
-		if(log.isDebugEnabled()) {
-			log.debug("pre-normalized test data:");
-			for (int i = 0; i < priori.size(1); i++) {
-				log.debug("[");
-				for (int j = 0; j < priori.size(2); j++) {
-					log.debug("{}", priori.getFloat(new int[] {0, i, j}));
-				}
-				log.debug("]");
-			}
-		}
-		// Normalize test data
-		this.normalizer.transform(priori);
-		// log post-normalized data
-		if(log.isDebugEnabled()) {
-			log.debug("post-normalized test data:");
-			for (int i = 0; i < priori.size(1); i++) {
-				log.debug("[");
-				for (int j = 0; j < priori.size(2); j++) {
-					log.debug("{}", priori.getFloat(new int[] {0, i, j}));
-				}
-				log.debug("]");
-			}
-		}
 
 		int inputCount = this.getNumOfInputs();
 		INDArray samples = Nd4j.create(new int[] {numTimeSteps, 1});
@@ -161,12 +138,33 @@ public class RegressionNetwork {
 			throw new RuntimeException(format);
 		}
 
+		log.debug("pre-normalized test data:");
+		log.debug("{}", priori);
+		
+		INDArray latestRealSample = Nd4j.create(new int[] {1, priori.size(1), 1});
+		for (int j = 0; j < priori.size(1) ; j++) {
+			float value = priori.getFloat(new int[] {0, j, priori.size(2)-1});
+			latestRealSample.putScalar(new int[] {0, j, 0}, value);
+		}
+		
+		// Normalize test data
+		this.normalizer.transform(latestRealSample);
+		// log post-normalized data
+		log.debug("{}", latestRealSample);
+
 		this.network.rnnClearPreviousState();
-		INDArray output = this.network.rnnTimeStep(priori);
-		this.normalizer.revertFeatures(output);
+		INDArray output = this.network.rnnTimeStep(latestRealSample);
 		output = output.ravel();
 		// Store the output for use in the inputs
 		LinkedList<Float> prevOutput = new LinkedList<>();
+		
+		for (int i = 0; i < priori.size(1)-1; i++) {
+			prevOutput.addFirst(priori.getFloat(new int[] {0, i, 0}));
+		}
+
+		// revert output
+		this.normalizer.revertLabels(output);
+		
 		for (int i = 0; i < output.length(); i++) {
 			prevOutput.add(output.getFloat(0, i));
 		}
@@ -183,14 +181,12 @@ public class RegressionNetwork {
 				// calculate the current timestep seconds offset and normalize the value
 				float epoch = EpochNormalizer.standard(DateTime.now().plusSeconds((i+1) * TIMESTEP_SEC).getMillis());
 				newInputs[inputCount-1] = epoch;
-				newInputs[inputCount-2] = prevOutput.peekLast();
-				for( int j=0; j<newInputs.length-2; j++ ) {
-					newInputs[j] = prevOutput.get(prevOutput.size()-1-j);
+				for( int j=0; j<newInputs.length-1; j++ ) {
+					newInputs[newInputs.length-2-j] = prevOutput.get(prevOutput.size()-1-j);
 				}
 			} else { // standard sliding [lag] window
-				newInputs[inputCount-1] = prevOutput.peekLast();
 				for( int j=0; j<newInputs.length-1; j++ ) {
-					newInputs[j] = prevOutput.get(prevOutput.size()-1-j);
+					newInputs[newInputs.length-1-j] = prevOutput.get(prevOutput.size()-1-j);
 				}
 			}
 

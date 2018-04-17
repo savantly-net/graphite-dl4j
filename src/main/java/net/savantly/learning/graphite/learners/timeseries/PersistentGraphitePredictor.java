@@ -42,6 +42,7 @@ public class PersistentGraphitePredictor {
 	private int epochs = 50;
 	private int hiddenLayerWidth = 30;
 	private int tbpttLength = 1000;
+	private int predictedStepCount = 2;
 
 	private PersistentGraphitePredictor(QueryableGraphiteClient client) {
 		this.client = client;
@@ -135,15 +136,14 @@ public class PersistentGraphitePredictor {
 	
 	public void update() {
 		//this.updateNetwork();
-		int stepCount = 8; // 15sec increments
-		float[] predictions = this.predict(stepCount);
+		float[] predictions = this.predict(predictedStepCount ); // 15sec increments
 		List<CarbonMetric> metrics = new ArrayList<>();
-		for (int i = 0; i<stepCount; i++) {
+		for (int i = 0; i<predictedStepCount; i++) {
 			String metricName = this.getPredictedTarget();
 			String value = String.format("%s", predictions[i]);
 			// we offset the epoch by the number of steps we predicted
 			// since we cannot store future dated metrics
-			long epoch = DateTime.now().minusSeconds(stepCount*15).plusSeconds(15*(i)).getMillis();
+			long epoch = DateTime.now().minusSeconds(predictedStepCount*15).plusSeconds(15*(i)).getMillis();
 			metrics.add(new SimpleCarbonMetric(metricName, value, epoch/1000));
 		}
 		this.client.saveCarbonMetrics(metrics);
@@ -270,6 +270,15 @@ public class PersistentGraphitePredictor {
 
 	public PersistentGraphitePredictor setTbpttLength(int tbpttLength) {
 		this.tbpttLength = tbpttLength;
+		return this;
+	}
+
+	public int getPredictedStepCount() {
+		return predictedStepCount;
+	}
+
+	public PersistentGraphitePredictor setPredictedStepCount(int predictedStepCount) {
+		this.predictedStepCount = predictedStepCount;
 		return this;
 	}
 
