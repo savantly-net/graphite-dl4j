@@ -1,5 +1,7 @@
 # graphite-dl4j
 
+![Java CI](https://github.com/savantly-net/graphite-dl4j/workflows/Java%20CI/badge.svg)
+
 Perform machine algorithms on graphite query results.  
 
 Also see -  
