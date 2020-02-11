@@ -1,10 +1,13 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>graphite-dl4j</artifactId>
 	<version>2.0.0-SNAPSHOT</version>
 	<name>graphite-dl4j</name>
 	<url>https://github.com/savantly-net/graphite-dl4j</url>
+	<groupId>net.savantly.learning</groupId>
+	<description>Perform machine algorithms on graphite query results</description>
 	<scm>
 		<url>https://github.com/savantly-net/graphite-dl4j</url>
 		<connection>https://github.com/savantly-net/graphite-dl4j.git</connection>
@@ -63,7 +66,7 @@
 			<artifactId>jackson-databind</artifactId>
 			<version>2.9.4</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>net.savantly</groupId>
 			<artifactId>graphite-client</artifactId>
@@ -114,6 +117,16 @@
 		</dependency>
 
 	</dependencies>
-	<groupId>net.savantly.learning</groupId>
-	<description>Perform machine algorithms on graphite query results</description>
+	<repositories>
+		<repository>
+			<id>oss.sonatype.org-snapshot</id>
+			<url>http://oss.sonatype.org/content/repositories/snapshots</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
 </project>
